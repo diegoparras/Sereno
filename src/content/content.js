@@ -353,8 +353,16 @@
 
   const dock = { el: null, btn: null, rail: null, menu: null, post: null, raf: 0 };
 
+  /**
+   * Crea el control (o lo vuelve a enganchar). Va colgado de <html>, fuera del
+   * <body> que maneja React: LinkedIn "hidrata" la página y, si encuentra nodos
+   * que no esperaba, reconstruye el árbol y los borra.
+   */
   function buildDock() {
-    if (dock.el || !document.body) return;
+    if (dock.el) {
+      if (!dock.el.isConnected) document.documentElement.append(dock.el);
+      return;
+    }
     const el = document.createElement('div');
     el.className = 'sereno-dock';
     el.hidden = true;
@@ -374,8 +382,15 @@
       else openMenuFor(dock.post);
     });
     el.append(rail, btn);
-    document.body.append(el);
+    document.documentElement.append(el);
     Object.assign(dock, { el, btn, rail });
+  }
+
+  /** Cuánto están desplazados los contenedores (y la ventana) que contienen a `el`. */
+  function scrolledAbove(el) {
+    let total = (document.scrollingElement || document.documentElement).scrollTop;
+    for (let x = el.parentElement; x && x !== document.documentElement; x = x.parentElement) total += x.scrollTop;
+    return total;
   }
 
   /**
@@ -387,12 +402,16 @@
     const vh = window.innerHeight;
     const TOP = 64; // barra superior de LinkedIn
     const line = TOP + (vh - TOP) * 0.4;
-    const atTop = (document.scrollingElement || document.documentElement).scrollTop < 10;
+    const candidates = Array.from(document.querySelectorAll('[data-sereno-author]')).filter((p) => {
+      const v = p.getAttribute(ATTR);
+      return v && v !== 'hide' && !p.classList.contains('sereno-walled');
+    });
+    // "Arriba de todo" = ningún contenedor del feed está desplazado. LinkedIn
+    // hace scroll en un contenedor interno, así que window.scrollY no alcanza.
+    const atTop = !!candidates[0] && scrolledAbove(candidates[0]) < 10;
     let best = null;
     let bestDist = Infinity;
-    for (const p of document.querySelectorAll('[data-sereno-author]')) {
-      const v = p.getAttribute(ATTR);
-      if (!v || v === 'hide' || p.classList.contains('sereno-walled')) continue;
+    for (const p of candidates) {
       const r = p.getBoundingClientRect();
       if (r.height === 0 || r.bottom <= TOP || r.top >= vh) continue;
       // Arriba de todo de la página, se está leyendo el primer post visible.
@@ -410,6 +429,7 @@
   function placeDock() {
     dock.raf = 0;
     if (!dock.el) return;
+    if (!dock.el.isConnected) document.documentElement.append(dock.el);
     const active = settings.enabled && onFeed();
     const post = active ? focusedPost() : null;
     if (!post) {
@@ -521,7 +541,7 @@
   document.addEventListener(
     'click',
     (e) => {
-      if (dock.menu && !dock.el.contains(e.target)) closeMenu();
+      if (dock.menu && dock.el && !dock.el.contains(e.target)) closeMenu();
     },
     true
   );

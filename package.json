@@ -1,6 +1,6 @@
 {
   "name": "sereno",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "description": "Extensión de Chrome: tu feed de LinkedIn sin desconocidos, sin humo y sin números.",
   "scripts": {

@@ -54,8 +54,14 @@ await page.goto('https://www.linkedin.com/feed/');
 await page.waitForTimeout(1500);
 
 // ---------- 1. Silenciar con un clic ----------
+// La "hidratación" simulada borra el control: Sereno lo tiene que volver a poner
+await page.waitForFunction(() => window.__hydrated === true);
+await page.waitForTimeout(700);
+assert.equal(await page.evaluate(() => window.scrollY), 0, 'el scroll es interno, como en LinkedIn');
+
 // El control está siempre visible y sigue a la publicación en foco
 await focus('Marta Ruiz');
+assert.ok(await page.evaluate(() => document.querySelector('main').scrollTop > 0), 'scrolleó el contenedor interno');
 assert.equal(await dockBtn.isVisible(), true, 'control siempre visible');
 assert.match(await dockBtn.getAttribute('aria-label'), /Marta Ruiz/);
 const geo = await page.evaluate(() => {
