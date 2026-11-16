@@ -22,6 +22,12 @@ La sección 8.2 ("Don'ts") incluye:
 | **Aclaración de no afiliación** en la ficha, opciones y política | Ítem 10 y política de suplantación de la Store. |
 | **Ante la duda, se muestra** | Minimiza el impacto si un selector falla. |
 
+## 2b. LinkedIn escanea las extensiones instaladas
+En la consola del feed se ven cientos de errores `GET chrome-extension://invalid/ net::ERR_FAILED` originados en un script de LinkedIn: la página prueba, una por una, si hay extensiones conocidas instaladas. Implicancias:
+- Confirma que LinkedIn vigila activamente las extensiones.
+- Sereno **no declara `web_accessible_resources`**, por lo que no puede ser detectada por esa vía. **Mantenerlo así.**
+- Igual podría detectarse por los cambios que hace en la página (clases `sereno-*`). Si Sereno se vuelve popular, LinkedIn podría identificarla; el riesgo realista recae en la cuenta del usuario, por eso la transparencia en la ficha es importante.
+
 ## 3. Chrome Web Store
 - Propósito único: cumplido (ordenar el feed).
 - Política de privacidad: obligatoria aunque no se recolecten datos. Ver `PRIVACY.md`.

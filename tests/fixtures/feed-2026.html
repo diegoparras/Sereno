@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Feed 2026 (simulado)</title>
+<!--
+  Réplica de la estructura real del feed de LinkedIn (nov. 2026), obtenida con
+  el script de diagnóstico: clases generadas, título oculto "Publicación en el
+  feed", data-testid="expandable-text-box", números dentro de los botones.
+  Nombres y contenidos son ficticios.
+-->
+<style>
+  body { margin:0; background:#f4f2ee; font: 14px/1.4 -apple-system, Segoe UI, Roboto, sans-serif; color:#1d1d1d; }
+  .k4dfeed { max-width: 560px; margin: 24px auto; }
+  .k4dcard { background:#fff; border-radius:8px; box-shadow:0 0 0 1px rgba(0,0,0,.08); margin-bottom:8px; padding:12px 16px; }
+  .k4da2y { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+  .k4dhdr { color:#666; font-size:12px; display:flex; align-items:center; gap:6px; }
+  .k4dact { display:flex; gap:10px; align-items:center; }
+  .k4dav { width:48px; height:48px; border-radius:50%; background:#c7d3cf; display:block; }
+  .k4dsm { color:#666; font-size:12px; margin:0; }
+  .k4dname { font-weight:600; margin:0; }
+  .k4dtxt { white-space: pre-line; margin:8px 0; }
+  .k4dbar { display:flex; gap:18px; border-top:1px solid #eee; padding-top:8px; margin-top:8px; }
+  .k4dbar button, .k4dbar a { display:flex; gap:4px; align-items:center; background:none; border:0; font:inherit; color:#555; }
+  hr { border:0; border-top:1px solid #eee; margin:8px 0; }
+</style>
+</head>
+<body>
+<main>
+<div class="k4dfeed" id="feed"></div>
+</main>
+<script>
+  const icon = (id) => `<svg id="${id}" width="18" height="18" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="none" stroke="#666"/></svg>`;
+  let n = 0;
+  function post({ header, headerHref = '/in/x/', actor, actorHref, metaLines, text, counts = [0, 0, 0] }) {
+    n++;
+    const hdr = header
+      ? `<div class="k4dhdr" componentkey="hdr-${n}"><a href="https://www.linkedin.com${headerHref}" aria-label="Ver perfil de ${header.name}"><span class="k4dav" style="width:24px;height:24px"></span></a>
+         <p class="k4dsm"><span><a href="https://www.linkedin.com${headerHref}" aria-label="Ver perfil de ${header.name}"><strong><span>${header.name}</span></strong></a><span></span> ${header.rest}</span></p>
+         <button aria-label="Abrir el menú de controles para la publicación">${icon('ellipses-horizontal-fill-small')}</button></div><hr role="presentation">`
+      : '';
+    return `
+    <div data-lazy-mount-id="m${n}"><div class="k4dayq" data-display-contents="true"><div class="k4da2a">
+      <div id="expanded${n}FeedType_MAIN_FEED_RELEVANCE" componentkey="expanded${n}">
+        <div class="k4dcard" role="listitem" componentkey="update-card-focus${n}">
+          <div class="k4dayq" data-display-contents="true"><div componentkey="x${n}">
+            <h2 class="k4dlje"><span class="k4da2y">Publicación en el feed</span><span></span></h2>
+            ${hdr}
+            <div class="k4dact">
+              <a href="https://www.linkedin.com${actorHref}"><figure style="margin:0"><span class="k4dav"></span></figure></a>
+              <div>
+                <a href="https://www.linkedin.com${actorHref}"><p class="k4dname"><span>${actor}</span></p></a>
+                ${metaLines.map((l) => `<div class="k4dlis"><p class="k4dsm"><span>${l}</span></p></div>`).join('')}
+              </div>
+            </div>
+            <div componentkey="translatable-commentary-${n}">
+              <p class="k4dtxt"><span data-testid="expandable-text-box">${text}</span></p>
+            </div>
+            <div class="k4dbar">
+              <button aria-label="Estado del botón de reacción: ninguna reacción">${icon('thumbs-up-outline-feed-compact')}<div><span><span><span class="k4dgpp">${counts[0]}</span></span></span></div></button>
+              <button aria-label="Comentar">${icon('comment-outline-feed-compact')}<div><span><span><span class="k4dgpp">${counts[1]}</span></span></span></div></button>
+              <button aria-label="Compartir">${icon('arrows-swap-outline-feed-compact')}<div><span><span><span class="k4dgpp">${counts[2]}</span></span></span></div></button>
+              <a aria-label="Enviar" href="https://www.linkedin.com/">${icon('paper-plane')}<div><span><span><span class="k4dgpp">&#8203;</span></span></span></div></a>
+              <a href="https://www.linkedin.com/"><div id="r${n}">${counts[0]} reacciones</div><div><ul role="presentation"><li>${icon('like-consumption-ring-small')}</li></ul></div></a>
+            </div>
+          </div></div>
+        </div>
+        <div class="k4da2a"></div>
+        <div id="replaceableCommentTools${n}" componentkey="cm${n}"></div>
+      </div>
+    </div></div></div>`;
+  }
+
+  const feed = document.getElementById('feed');
+  const add = (p) => feed.insertAdjacentHTML('beforeend', post(p));
+
+  // 1: publicidad con contexto social → no se toca (pero sí se ocultan los números)
+  add({ header: { name: 'Leo Mansur', rest: 'sigue esta página' }, actor: 'Planeta Agua', actorHref: '/company/planeta-agua/',
+        metaLines: ['174.617 seguidores', 'Promocionado'], text: 'Water resource managers face increasing pressure from environmental change.', counts: [614, 21, 62] });
+  // 2: contacto directo → se muestra
+  add({ actor: 'Marta Ruiz', actorHref: '/in/marta/', metaLines: ['Marta Ruiz • 1er', 'Líder de datos en Globex', '3 h •'],
+        text: 'Esta semana empiezo un nuevo desafío como líder de datos en Globex.\n\nSi alguien está migrando pipelines a streaming, escríbanme: tengo notas largas sobre lo que nos salió mal.', counts: [44, 2, 4] });
+  // 3: actividad ajena → se oculta
+  add({ header: { name: 'Diego Fernández', rest: 'ha comentado esto' }, actor: 'Gurú del Éxito', actorHref: '/in/guru/',
+        metaLines: ['Gurú del Éxito • 3er+', 'Coach de mentalidad', '1 d •'], text: 'El éxito es una decisión.', counts: [12402, 900, 300] });
+  // 4: sigue esta página, sin publicidad → se oculta
+  add({ header: { name: 'Ana Gómez', rest: 'sigue esta página' }, actor: 'Acme Software', actorHref: '/company/acme/',
+        metaLines: ['48.120 seguidores', '2 d •'], text: 'Estamos contratando ingenieros de plataforma en remoto.', counts: [88, 3, 1] });
+  // 5: humo de un contacto → se atenúa
+  add({ actor: 'Pablo Vega', actorHref: '/in/pablo/', metaLines: ['Pablo Vega • 1er', 'Founder & CEO | Speaker', '5 h •'],
+        text: 'Hace 5 años me despidieron.\n\nNo tenía nada.\n\nNi ahorros.\n\nNi contactos.\n\nPero tenía un sueño.\n\nHoy facturo 7 cifras.\n\nLéelo de nuevo.\n\nComenta "SUEÑO" y te mando mi método.', counts: [3201, 912, 140] });
+
+  // 6: carga diferida: primero aparece el esqueleto, el contenido llega después
+  setTimeout(() => {
+    feed.insertAdjacentHTML('beforeend', `<div data-lazy-mount-id="late"><div role="listitem" componentkey="update-card-focuslate"><h2><span class="k4da2y">Publicación en el feed</span></h2></div></div>`);
+  }, 300);
+  setTimeout(() => {
+    document.querySelector('[data-lazy-mount-id="late"]').outerHTML = post({ header: { name: 'Juan Paz', rest: 'ha recomendado esto' },
+      actor: 'Alguien Viral', actorHref: '/in/viral/', metaLines: ['Alguien Viral • 2º', '4 h •'], text: 'Hot take incoming.', counts: [5, 1, 0] });
+  }, 900);
+</script>
+</body>
+</html>

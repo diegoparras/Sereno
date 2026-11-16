@@ -51,11 +51,19 @@ npm run rename -- "Nuevo Nombre"
 Los textos se editan en `scripts/strings.mjs`, nunca a mano en `_locales/`. Los tests e2e e íconos usan Playwright.
 
 ## Cuando LinkedIn cambie su HTML
-Se va a romper cada tanto, es inevitable. Todo lo que depende del HTML está en el objeto `SEL` de `src/content/content.js`. El diseño falla "hacia mostrar": si un selector deja de funcionar, se ve LinkedIn normal y no se oculta nada por error.
+Se va a romper cada tanto, es inevitable. Desde noviembre de 2026 LinkedIn usa clases generadas (`k4dl5v`, `k4dayy`…) que cambian con cada versión, así que Sereno **no las usa**. Se apoya en lo más estable:
+- el título oculto de cada publicación ("Publicación en el feed"),
+- `data-testid="expandable-text-box"` para el texto,
+- `aria-label` de los botones y textos visibles ("Promocionado", "sigue esta página", "614 reacciones").
+
+Todo lo que depende del HTML está en el objeto `SEL` de `src/content/content.js`. El diseño falla "hacia mostrar": si un selector deja de funcionar, se ve LinkedIn normal y no se oculta nada por error.
+
+**Cómo diagnosticar:** abrir el feed, F12 → Console, pegar `scripts/diagnose.js`. Descarga `sereno-diagnostico.json` con la estructura real; con eso se actualiza `SEL` y la réplica `tests/fixtures/feed-2026.html`.
 
 ## Estado
-- [x] MVP funcional con tests unitarios (17) y e2e
-- [ ] **Validar selectores contra el LinkedIn real** (los tests usan un feed simulado)
+- [x] MVP funcional con tests unitarios (19) y e2e (feed clásico y feed 2026)
+- [x] Adaptado al feed de LinkedIn de nov. 2026 (a partir de un diagnóstico real)
+- [ ] Confirmar en el LinkedIn real después del ajuste
 - [ ] Definir el nombre definitivo (ver docs/LEGAL.md)
 - [ ] Publicar la política de privacidad en una URL pública y completar el email de contacto
 - [ ] Imagen promocional de 440×280

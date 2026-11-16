@@ -175,3 +175,17 @@ test('configuración: merge tolera datos viejos o corruptos', () => {
   assert.deepEqual(m.muted.words, []);
   assert.equal('extra' in m.smoke, false);
 });
+
+test('feed 2026: "sigue esta página" y variantes', () => {
+  for (const h of ['Leonardo Pérez sigue esta página', 'Ana follows this page', 'A Juan le ha gustado esto', 'Carla segue esta página']) {
+    assert.equal(D.socialContext(h), 'activity', h);
+  }
+});
+
+test('feed 2026: contadores de interacción', () => {
+  for (const txt of ['614 reacciones', '21 comentarios', '62 veces compartido', '1 comentario', '3.402 impresiones', '1,2 mil reacciones', '614 reactions']) {
+    assert.ok(D.isMetricText(txt), txt);
+  }
+  assert.ok(!D.isMetricText('Comentar'));
+  assert.ok(!D.isMetricText('Publicación en el feed'));
+});

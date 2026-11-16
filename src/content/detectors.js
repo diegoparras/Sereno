@@ -27,14 +27,18 @@
     // English
     /\b(like|likes|love|loves|celebrate|celebrates|support|supports|find|finds|reacted to|commented on|replied to|reposted|shared)\b[^\n]{0,40}\bthis\b/,
     /\bcommented on\b|\breposted\b/,
+    /\bfollows? (this page|this company|this)\b/,
     // Español
     /\b(le|les) (gusta|gustan|gusto|encanta|encanto|parece|parecio)\b/,
     /\b(celebra|celebran|apoya|apoyan|recomienda|recomiendan) esto\b/,
     /\b(ha|han) (comentado|compartido|republicado|recomendado|reaccionado|respondido|contestado|celebrado|apoyado)\b/,
     /\b(comento|comentaron|compartio|compartieron|republico|republicaron|reacciono|reaccionaron|respondio)\b/,
     /\ble resulta (interesante|divertido|curioso)\b/,
+    /\b(sigue|siguen) (esta pagina|esta empresa|esto)\b/,
+    /\b(le|les) ha(n)? (gustado|encantado|parecido)\b/,
     // Português
-    /\b(gostou|gostaram|amou|celebrou|apoiou|comentou|compartilhou|republicou|reagiu|achou isso)\b/
+    /\b(gostou|gostaram|amou|celebrou|apoiou|comentou|compartilhou|republicou|reagiu|achou isso)\b/,
+    /\bsegue (esta pagina|esta empresa)\b/
   ];
 
   const SUGGESTED = [
@@ -257,10 +261,22 @@
     return show;
   }
 
-  /** "12.345 seguidores", "1,2 mil followers", "500+ connections"… */
-  const METRIC_TEXT = /^\s*[\d.,\s]+\s*(k|m|mil|mill\.?|mi)?\+?\s*(followers|seguidores|connections|conexiones|contactos|conexoes|conexões)\s*$/i;
+  /** "12.345 seguidores", "1,2 mil followers", "614 reacciones", "21 comentarios"… */
+  const METRIC_TEXT = new RegExp(
+    '^\\s*[\\d.,\\s]+\\s*(k|m|mil|mill\\.?|mi)?\\+?\\s*(' +
+      [
+        'followers?', 'seguidor(es)?', 'connections?', 'conexi(on|ones)', 'contactos?', 'conexoes', 'conexões',
+        'reactions?', 'reacci(on|ones)', 'reacoes', 'reações', 'likes?', 'recomendaciones',
+        'comments?', 'comentarios?', 'comentários?',
+        'reposts?', 'veces compartid[oa]', 'compartid[oa]s?', 'shares?', 'compartilhamentos?',
+        'impressions?', 'impresiones', 'visualizaci(on|ones)', 'views?', 'vistas?',
+        'visitas al perfil', 'profile viewers?'
+      ].join('|') +
+      ')\\s*$',
+    'i'
+  );
   function isMetricText(text) {
-    return METRIC_TEXT.test(String(text || ''));
+    return METRIC_TEXT.test(String(text || '').replace(/\u200b/g, ''));
   }
 
   const api = {

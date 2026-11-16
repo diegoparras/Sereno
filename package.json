@@ -1,13 +1,13 @@
 {
   "name": "sereno",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Extensión de Chrome: tu feed de LinkedIn sin desconocidos, sin humo y sin números.",
   "scripts": {
     "build": "node scripts/build-locales.mjs && node scripts/build-icons.mjs",
     "test": "node --test tests/*.test.mjs",
-    "e2e": "node tests/e2e.mjs",
-    "screenshots": "node tests/e2e.mjs --shots",
+    "e2e": "node tests/e2e.mjs && node tests/e2e-2026.mjs",
+    "screenshots": "node tests/e2e.mjs --shots && node tests/e2e-2026.mjs --shots",
     "pack": "node scripts/build-locales.mjs && node scripts/pack.mjs",
     "rename": "node scripts/rename.mjs"
   },
