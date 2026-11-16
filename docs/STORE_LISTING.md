@@ -3,7 +3,7 @@
 Textos listos para pegar en el panel de desarrollador. Mencionar LinkedIn solo para describir con qué sitio funciona (uso descriptivo) y siempre con la aclaración de no afiliación.
 
 ## Nombre
-Tidy Feed
+Sereno
 
 ## Resumen corto (máx. 132 caracteres)
 **ES:** Tu feed de LinkedIn sin desconocidos, sin humo y sin números. 100% en tu navegador.
@@ -14,7 +14,7 @@ Productividad (Productivity)
 
 ## Descripción (ES)
 
-El feed está hecho para que scrollees, no para que te sirva. Tidy Feed lo ordena para que vuelvas a ver a la gente que conoces.
+El feed está hecho para que scrollees, no para que te sirva. Sereno lo ordena para que vuelvas a ver a la gente que conoces.
 
 **Solo mi red**
 Oculta las publicaciones que aparecen porque "a alguien le gustó" o "alguien comentó", además de los sugeridos de desconocidos. Hay un modo estricto opcional que muestra solo a tus contactos directos.
@@ -34,11 +34,11 @@ Oculta lo que mencione los temas que no quieres ver.
 • No hace nada en tu nombre: no da likes, no comenta, no envía mensajes.
 • No toca la publicidad.
 
-Tidy Feed es un proyecto independiente. No está afiliado, respaldado ni patrocinado por LinkedIn Corporation. LinkedIn es una marca registrada de LinkedIn Corporation.
+Sereno es un proyecto independiente. No está afiliado, respaldado ni patrocinado por LinkedIn Corporation. LinkedIn es una marca registrada de LinkedIn Corporation.
 
 ## Description (EN)
 
-Feeds are built to keep you scrolling, not to be useful. Tidy Feed tidies yours so you can see the people you actually know again.
+Feeds are built to keep you scrolling, not to be useful. Sereno tidies yours so you can see the people you actually know again.
 
 **Just my network**: hides posts that only show up because someone liked or commented on them, plus suggested posts from strangers. Optional strict mode shows direct connections only.
 
@@ -50,7 +50,7 @@ Feeds are built to keep you scrolling, not to be useful. Tidy Feed tidies yours 
 
 **Private by design**: runs 100% in your browser, with no servers, analytics or accounts. It stores only your settings and a counter, never acts on your behalf and never touches ads.
 
-Tidy Feed is an independent project. It is not affiliated with, endorsed or sponsored by LinkedIn Corporation. LinkedIn is a registered trademark of LinkedIn Corporation.
+Sereno is an independent project. It is not affiliated with, endorsed or sponsored by LinkedIn Corporation. LinkedIn is a registered trademark of LinkedIn Corporation.
 
 ## Pestaña "Privacidad" del panel
 

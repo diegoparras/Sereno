@@ -1,11 +1,11 @@
-# Política de privacidad — Tidy Feed
+# Política de privacidad — Sereno
 
 _Última actualización: 16 de noviembre de 2026_
 
-**Resumen: Tidy Feed no recolecta, no vende y no envía tus datos a ningún lado.**
+**Resumen: Sereno no recolecta, no vende y no envía tus datos a ningún lado.**
 
 ## Qué hace la extensión
-Tidy Feed lee las publicaciones que LinkedIn ya te muestra en tu navegador para decidir, según tus ajustes, cuáles ocultar o atenuar. Ese análisis ocurre **solo dentro de tu navegador**.
+Sereno lee las publicaciones que LinkedIn ya te muestra en tu navegador para decidir, según tus ajustes, cuáles ocultar o atenuar. Ese análisis ocurre **solo dentro de tu navegador**.
 
 ## Qué datos guarda
 Usa el almacenamiento de Chrome (`chrome.storage`) para guardar únicamente:
@@ -13,7 +13,7 @@ Usa el almacenamiento de Chrome (`chrome.storage`) para guardar únicamente:
 - **Contadores anónimos**: cuántas publicaciones se ocultaron hoy y en total. Son solo números, sin contenido, autores ni enlaces.
 
 ## Qué no hace
-- No envía información a servidores propios ni de terceros. Tidy Feed no tiene servidores.
+- No envía información a servidores propios ni de terceros. Sereno no tiene servidores.
 - No usa analítica, cookies de seguimiento ni publicidad.
 - No guarda el contenido de las publicaciones, nombres, perfiles ni mensajes.
 - No hace acciones en tu nombre (no da likes, no comenta, no envía mensajes).
@@ -31,13 +31,13 @@ Desinstalar la extensión elimina todo lo que guardó. También puedes usar «Re
 
 ---
 
-# Privacy policy — Tidy Feed
+# Privacy policy — Sereno
 
 _Last updated: November 16, 2026_
 
-**In short: Tidy Feed does not collect, sell or send your data anywhere.**
+**In short: Sereno does not collect, sell or send your data anywhere.**
 
-Tidy Feed reads the posts LinkedIn already shows you in your browser to decide, based on your settings, which to hide or dim. This happens **only inside your browser**.
+Sereno reads the posts LinkedIn already shows you in your browser to decide, based on your settings, which to hide or dim. This happens **only inside your browser**.
 
 It stores, via `chrome.storage`, only your **settings** (enabled features and muted words; synced by Chrome if you have sync on) and **anonymous counters** of hidden posts (numbers only, no content, authors or links).
 

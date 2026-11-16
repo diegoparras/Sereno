@@ -1,10 +1,10 @@
 /*
- * Tidy Feed — detectores puros (sin DOM), para poder testearlos en Node.
+ * Sereno — detectores puros (sin DOM), para poder testearlos en Node.
  *
  * Principio: ante la duda, se muestra. Un falso positivo (esconder algo
  * de alguien que conocés) es mucho peor que un falso negativo.
  *
- * Regla fija: Tidy Feed nunca oculta ni modifica publicaciones promocionadas.
+ * Regla fija: Sereno nunca oculta ni modifica publicaciones promocionadas.
  */
 (function (root) {
   'use strict';
@@ -275,6 +275,6 @@
     isMetricText,
     SENSITIVITY_THRESHOLD
   };
-  root.TidyDetect = api;
+  root.SerenoDetect = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

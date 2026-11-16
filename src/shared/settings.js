@@ -1,5 +1,5 @@
 /*
- * Tidy Feed — configuración compartida (content script, popup, opciones, background).
+ * Sereno — configuración compartida (content script, popup, opciones, background).
  * Todo se guarda en chrome.storage del propio navegador. Nada sale del equipo.
  */
 (function (root) {
@@ -31,12 +31,12 @@
       words: []
     },
     display: {
-      showPlaceholders: false // dejar una línea "Tidy Feed ocultó un post · Mostrar"
+      showPlaceholders: false // dejar una línea "Sereno ocultó un post · Mostrar"
     }
   });
 
-  const STATS_KEY = 'tidyStats';
-  const SETTINGS_KEY = 'tidySettings';
+  const STATS_KEY = 'serenoStats';
+  const SETTINGS_KEY = 'serenoSettings';
 
   function isObject(v) {
     return v !== null && typeof v === 'object' && !Array.isArray(v);
@@ -126,7 +126,7 @@
     return s;
   }
 
-  root.TidySettings = {
+  root.SerenoSettings = {
     DEFAULTS,
     SETTINGS_KEY,
     STATS_KEY,
@@ -138,5 +138,5 @@
     loadStats,
     addStats
   };
-  if (typeof module !== 'undefined' && module.exports) module.exports = root.TidySettings;
+  if (typeof module !== 'undefined' && module.exports) module.exports = root.SerenoSettings;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

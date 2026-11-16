@@ -1,7 +1,7 @@
 (async function () {
   'use strict';
-  const { t, localize } = globalThis.TidyUI;
-  const S = globalThis.TidySettings;
+  const { t, localize } = globalThis.SerenoUI;
+  const S = globalThis.SerenoSettings;
 
   localize();
 

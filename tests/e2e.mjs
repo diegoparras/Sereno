@@ -17,7 +17,7 @@ const shotDir = join(root, 'docs/screenshots');
 if (shots) mkdirSync(shotDir, { recursive: true });
 
 const fixture = readFileSync(join(root, 'tests/fixtures/feed.html'), 'utf8');
-const userData = mkdtempSync(join(tmpdir(), 'tidy-e2e-'));
+const userData = mkdtempSync(join(tmpdir(), 'sereno-e2e-'));
 
 const ctx = await chromium.launchPersistentContext(userData, {
   headless: true,
@@ -38,10 +38,10 @@ const extId = new URL(sw.url()).host;
 
 // Silenciar una palabra antes de abrir el feed
 await sw.evaluate(async () => {
-  const data = await chrome.storage.sync.get('tidySettings');
-  const s = data.tidySettings || {};
+  const data = await chrome.storage.sync.get('serenoSettings');
+  const s = data.serenoSettings || {};
   s.muted = { words: ['cripto'] };
-  await chrome.storage.sync.set({ tidySettings: s });
+  await chrome.storage.sync.set({ serenoSettings: s });
 });
 
 const page = await ctx.newPage();
@@ -51,10 +51,10 @@ await page.waitForTimeout(1500);
 const state = await page.evaluate(() =>
   Array.from(document.querySelectorAll('[data-id]')).map((el) => ({
     id: el.getAttribute('data-id').split(':').pop(),
-    verdict: el.getAttribute('data-tidy'),
+    verdict: el.getAttribute('data-sereno'),
     hidden: getComputedStyle(el).display === 'none',
-    dim: el.classList.contains('tidy-dim'),
-    strip: el.previousElementSibling?.classList.contains('tidy-strip') ? el.previousElementSibling.innerText : null,
+    dim: el.classList.contains('sereno-dim'),
+    strip: el.previousElementSibling?.classList.contains('sereno-strip') ? el.previousElementSibling.innerText : null,
     countsVisible: (() => {
       const c = el.querySelector('.social-details-social-counts');
       return c ? getComputedStyle(c).display !== 'none' : null;
@@ -82,11 +82,11 @@ assert.equal(byId[7].hidden, true, 'post cargado después (scroll infinito) tamb
 
 // "Ver igual" revela el post atenuado
 await page.click('[data-id="urn:li:activity:5"] >> xpath=preceding-sibling::div[1] >> button');
-assert.equal(await page.evaluate(() => document.querySelector('[data-id="urn:li:activity:5"]').classList.contains('tidy-dim')), false);
+assert.equal(await page.evaluate(() => document.querySelector('[data-id="urn:li:activity:5"]').classList.contains('sereno-dim')), false);
 
 // Estadísticas
 await page.waitForTimeout(1500);
-const stats = await sw.evaluate(async () => (await chrome.storage.local.get('tidyStats')).tidyStats);
+const stats = await sw.evaluate(async () => (await chrome.storage.local.get('serenoStats')).serenoStats);
 console.log('stats', stats);
 assert.equal(stats.network, 3);
 assert.equal(stats.smoke, 1);
@@ -94,12 +94,12 @@ assert.equal(stats.muted, 1);
 
 // Pausa global: todo vuelve a la normalidad en vivo
 await sw.evaluate(async () => {
-  const { tidySettings } = await chrome.storage.sync.get('tidySettings');
-  await chrome.storage.sync.set({ tidySettings: { ...tidySettings, enabled: false } });
+  const { serenoSettings } = await chrome.storage.sync.get('serenoSettings');
+  await chrome.storage.sync.set({ serenoSettings: { ...serenoSettings, enabled: false } });
 });
 await page.waitForTimeout(500);
-const anyHidden = await page.evaluate(() => document.querySelectorAll('.tidy-hidden, .tidy-dim, .tidy-strip').length);
-const metricsOff = await page.evaluate(() => document.documentElement.classList.contains('tidy-no-metrics'));
+const anyHidden = await page.evaluate(() => document.querySelectorAll('.sereno-hidden, .sereno-dim, .sereno-strip').length);
+const metricsOff = await page.evaluate(() => document.documentElement.classList.contains('sereno-no-metrics'));
 assert.equal(anyHidden, 0, 'pausa revierte todo');
 assert.equal(metricsOff, false);
 console.log('✔ e2e ok');
@@ -107,7 +107,7 @@ console.log('✔ e2e ok');
 if (shots) {
   // Restaurar ajustes, recargar el feed y sacar capturas
   await sw.evaluate(async () => {
-    await chrome.storage.sync.set({ tidySettings: { muted: { words: ['cripto'] } } });
+    await chrome.storage.sync.set({ serenoSettings: { muted: { words: ['cripto'] } } });
   });
   await page.reload();
   await page.waitForTimeout(1500);

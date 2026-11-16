@@ -1,30 +1,30 @@
-/* Tidy Feed — estilos inyectados en LinkedIn. Todo prefijado con "tidy-". */
+/* Sereno — estilos inyectados en LinkedIn. Todo prefijado con "sereno-". */
 
 :root {
-  --tidy-ink: #1d3a33;
-  --tidy-muted: #5d736d;
-  --tidy-bg: #eef5f2;
-  --tidy-border: #cfe1da;
-  --tidy-accent: #2f7d6b;
-  --tidy-accent-ink: #ffffff;
+  --sereno-ink: #1d3a33;
+  --sereno-muted: #5d736d;
+  --sereno-bg: #eef5f2;
+  --sereno-border: #cfe1da;
+  --sereno-accent: #2f7d6b;
+  --sereno-accent-ink: #ffffff;
 }
 html.theme--dark,
 html[data-theme='dark'] {
-  --tidy-ink: #d8ebe4;
-  --tidy-muted: #93aaa3;
-  --tidy-bg: #1c2b27;
-  --tidy-border: #2d4740;
-  --tidy-accent: #5fb8a2;
-  --tidy-accent-ink: #0f1f1b;
+  --sereno-ink: #d8ebe4;
+  --sereno-muted: #93aaa3;
+  --sereno-bg: #1c2b27;
+  --sereno-border: #2d4740;
+  --sereno-accent: #5fb8a2;
+  --sereno-accent-ink: #0f1f1b;
 }
 
 /* Publicaciones ocultas */
-.tidy-hidden {
+.sereno-hidden {
   display: none !important;
 }
 
 /* Humo atenuado: se ve, pero no grita. Al pasar el mouse, vuelve. */
-.tidy-dim {
+.sereno-dim {
   opacity: 0.38;
   filter: grayscale(0.85);
   max-height: 220px;
@@ -33,72 +33,72 @@ html[data-theme='dark'] {
   -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
   mask-image: linear-gradient(to bottom, #000 55%, transparent);
 }
-.tidy-dim:hover,
-.tidy-dim:focus-within {
+.sereno-dim:hover,
+.sereno-dim:focus-within {
   opacity: 0.9;
   filter: none;
 }
 
 /* Franja informativa */
-.tidy-strip {
+.sereno-strip {
   display: flex;
   align-items: center;
   gap: 8px;
   margin: 0 0 6px;
   padding: 7px 12px;
-  border: 1px solid var(--tidy-border);
+  border: 1px solid var(--sereno-border);
   border-radius: 10px;
-  background: var(--tidy-bg);
-  color: var(--tidy-muted);
+  background: var(--sereno-bg);
+  color: var(--sereno-muted);
   font: 500 12.5px/1.35 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
-.tidy-strip__mark {
+.sereno-strip__mark {
   flex: none;
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--tidy-accent);
+  background: var(--sereno-accent);
   opacity: 0.8;
 }
-.tidy-strip__label {
+.sereno-strip__label {
   flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.tidy-strip__btn {
+.sereno-strip__btn {
   flex: none;
   border: 0;
   border-radius: 999px;
   padding: 3px 10px;
   background: transparent;
-  color: var(--tidy-accent);
+  color: var(--sereno-accent);
   font: inherit;
   font-weight: 600;
   cursor: pointer;
 }
-.tidy-strip__btn:hover {
-  background: var(--tidy-accent);
-  color: var(--tidy-accent-ink);
+.sereno-strip__btn:hover {
+  background: var(--sereno-accent);
+  color: var(--sereno-accent-ink);
 }
-.tidy-strip__btn:focus-visible {
-  outline: 2px solid var(--tidy-accent);
+.sereno-strip__btn:focus-visible {
+  outline: 2px solid var(--sereno-accent);
   outline-offset: 2px;
 }
 
 /* ---------- Sin números ---------- */
-html.tidy-no-metrics .social-details-social-counts,
-html.tidy-no-metrics .social-details-social-counts__reactions-count,
-html.tidy-no-metrics .social-details-social-counts__comments,
-html.tidy-no-metrics .comments-comment-social-bar__reactions-count,
-html.tidy-no-metrics .comments-comment-social-bar__reactions-count--cr,
-html.tidy-no-metrics .comments-comment-social-bar__replies-count,
-html.tidy-no-metrics .feed-identity-widget-item__stat,
-html.tidy-no-metrics .pv-dashboard-section .pv-dashboard-section__metric-count,
-html.tidy-no-metrics [data-tidy-metric] {
+html.sereno-no-metrics .social-details-social-counts,
+html.sereno-no-metrics .social-details-social-counts__reactions-count,
+html.sereno-no-metrics .social-details-social-counts__comments,
+html.sereno-no-metrics .comments-comment-social-bar__reactions-count,
+html.sereno-no-metrics .comments-comment-social-bar__reactions-count--cr,
+html.sereno-no-metrics .comments-comment-social-bar__replies-count,
+html.sereno-no-metrics .feed-identity-widget-item__stat,
+html.sereno-no-metrics .pv-dashboard-section .pv-dashboard-section__metric-count,
+html.sereno-no-metrics [data-sereno-metric] {
   visibility: hidden !important;
 }
-html.tidy-no-metrics .social-details-social-counts {
+html.sereno-no-metrics .social-details-social-counts {
   display: none !important;
 }

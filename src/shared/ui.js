@@ -1,4 +1,4 @@
-/* Tidy Feed — utilidades de interfaz para popup y opciones. */
+/* Sereno — utilidades de interfaz para popup y opciones. */
 (function (root) {
   'use strict';
 
@@ -32,5 +32,5 @@
     }
   }
 
-  root.TidyUI = { t, localize, formatNumber };
+  root.SerenoUI = { t, localize, formatNumber };
 })(globalThis);

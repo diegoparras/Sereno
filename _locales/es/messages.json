@@ -1,6 +1,6 @@
 {
   "extName": {
-    "message": "Tidy Feed"
+    "message": "Sereno"
   },
   "extDescription": {
     "message": "Tu feed de LinkedIn sin desconocidos, sin humo y sin números. 100% en tu navegador."
@@ -66,7 +66,7 @@
     "message": "En pausa"
   },
   "popupToggleLabel": {
-    "message": "Activar o pausar Tidy Feed"
+    "message": "Activar o pausar Sereno"
   },
   "statCaption": {
     "message": "publicaciones fuera de tu camino hoy"
@@ -113,7 +113,7 @@
     "message": "Todo queda en tu navegador"
   },
   "popupPausedHint": {
-    "message": "Tidy Feed está en pausa. LinkedIn se ve como siempre."
+    "message": "Sereno está en pausa. LinkedIn se ve como siempre."
   },
   "optTitle": {
     "message": "Ajustes"
@@ -122,7 +122,7 @@
     "message": "Tu feed, sin ruido."
   },
   "welcomeTitle": {
-    "message": "Listo, Tidy Feed ya está trabajando"
+    "message": "Listo, Sereno ya está trabajando"
   },
   "welcomeBody": {
     "message": "Abre tu feed de LinkedIn y vas a notar la diferencia. Viene configurado con valores razonables; aquí puedes ajustarlo a tu gusto."
@@ -253,16 +253,16 @@
     "message": "Privacidad"
   },
   "privacyBody": {
-    "message": "Tidy Feed funciona 100% en tu navegador. No tiene servidores, no usa analítica y no recolecta datos personales. Solo guarda tus ajustes y un contador de publicaciones ocultas."
+    "message": "Sereno funciona 100% en tu navegador. No tiene servidores, no usa analítica y no recolecta datos personales. Solo guarda tus ajustes y un contador de publicaciones ocultas."
   },
   "secAbout": {
     "message": "Acerca de"
   },
   "aboutBody": {
-    "message": "Tidy Feed es un proyecto independiente. No está afiliado, respaldado ni patrocinado por LinkedIn Corporation. LinkedIn es una marca registrada de LinkedIn Corporation."
+    "message": "Sereno es un proyecto independiente. No está afiliado, respaldado ni patrocinado por LinkedIn Corporation. LinkedIn es una marca registrada de LinkedIn Corporation."
   },
   "aboutAds": {
-    "message": "Tidy Feed no oculta ni modifica la publicidad."
+    "message": "Sereno no oculta ni modifica la publicidad."
   },
   "resetDefaults": {
     "message": "Restablecer ajustes"

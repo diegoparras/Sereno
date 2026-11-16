@@ -28,7 +28,7 @@ La sección 8.2 ("Don'ts") incluye:
 - Marcas: no usar el logo de LinkedIn en el ícono ni en las capturas promocionales.
 - Las capturas no deben mostrar datos reales de terceros: usar el feed simulado.
 
-## 4. Nombre: pendiente de decisión
+## 4. Nombre: **Sereno** (elegido el 16/11/2026)
 Candidatos revisados (búsqueda rápida, no es un estudio de marca):
 | Nombre | Hallazgo | Riesgo |
 |---|---|---|
@@ -36,8 +36,8 @@ Candidatos revisados (búsqueda rápida, no es un estudio de marca):
 | Feedy | A una letra de **Feedly**, una marca muy conocida en la misma categoría (feeds) | **Alto** |
 | Tidy Feed | "TidyFeed" existe: add-on activo para filtrar X (tidyfeed.app) y una extensión vieja para Facebook | **Medio** |
 | Clean My Feed | Existe una extensión abandonada con ese nombre exacto y varias "Clean Feed" | Medio-bajo (nombre descriptivo, difícil de reclamar, pero poco distintivo) |
-| Sereno | Sin coincidencias exactas; hay varias "Serene/Serenity" de nueva pestaña | Bajo |
+| **Sereno** ✅ | Sin coincidencias exactas; hay varias "Serene/Serenity" de nueva pestaña (otra categoría) | Bajo |
 
 Antes de publicar: buscar en la Chrome Web Store, en la [USPTO](https://tmsearch.uspto.gov) y en la oficina de marcas de tu país (en Argentina, el INPI), y verificar disponibilidad de dominio.
 
-Para cambiar el nombre en todo el proyecto: `npm run rename -- "Nuevo Nombre"` y luego `npm run build`.
+Pendiente antes de publicar, para el nombre elegido: búsqueda formal de marca y dominio. Para cambiar el nombre en todo el proyecto: `npm run rename -- "Nuevo Nombre"` y luego `npm run build`.

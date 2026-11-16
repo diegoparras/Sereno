@@ -1,6 +1,6 @@
 // Fuente única de textos. `node scripts/build-locales.mjs` genera _locales/*/messages.json.
 // Español neutro (sirve para toda Latinoamérica y España).
-export const BRAND = 'Tidy Feed';
+export const BRAND = 'Sereno';
 
 export const strings = {
   extName: { es: BRAND, en: BRAND },
@@ -27,7 +27,7 @@ export const strings = {
   // ---- Popup ----
   popupOn: { es: 'Activo', en: 'On' },
   popupOff: { es: 'En pausa', en: 'Paused' },
-  popupToggleLabel: { es: 'Activar o pausar Tidy Feed', en: 'Turn Tidy Feed on or off' },
+  popupToggleLabel: { es: 'Activar o pausar Sereno', en: 'Turn Sereno on or off' },
   statCaption: { es: 'publicaciones fuera de tu camino hoy', en: 'posts kept out of your way today' },
   statNetwork: { es: 'de desconocidos', en: 'from strangers' },
   statSmoke: { es: 'humo', en: 'fluff' },
@@ -42,14 +42,14 @@ export const strings = {
   popupMore: { es: 'Más ajustes', en: 'More settings' },
   popupPrivacy: { es: 'Todo queda en tu navegador', en: 'Everything stays in your browser' },
   popupPausedHint: {
-    es: 'Tidy Feed está en pausa. LinkedIn se ve como siempre.',
-    en: 'Tidy Feed is paused. LinkedIn looks as usual.'
+    es: 'Sereno está en pausa. LinkedIn se ve como siempre.',
+    en: 'Sereno is paused. LinkedIn looks as usual.'
   },
 
   // ---- Opciones ----
   optTitle: { es: 'Ajustes', en: 'Settings' },
   optTagline: { es: 'Tu feed, sin ruido.', en: 'Your feed, without the noise.' },
-  welcomeTitle: { es: 'Listo, Tidy Feed ya está trabajando', en: 'All set, Tidy Feed is on' },
+  welcomeTitle: { es: 'Listo, Sereno ya está trabajando', en: 'All set, Sereno is on' },
   welcomeBody: {
     es: 'Abre tu feed de LinkedIn y vas a notar la diferencia. Viene configurado con valores razonables; aquí puedes ajustarlo a tu gusto.',
     en: 'Open your LinkedIn feed and you will notice the difference. It comes with sensible defaults; tune it to your liking here.'
@@ -131,17 +131,17 @@ export const strings = {
 
   secPrivacy: { es: 'Privacidad', en: 'Privacy' },
   privacyBody: {
-    es: 'Tidy Feed funciona 100% en tu navegador. No tiene servidores, no usa analítica y no recolecta datos personales. Solo guarda tus ajustes y un contador de publicaciones ocultas.',
-    en: 'Tidy Feed runs 100% in your browser. It has no servers, no analytics and collects no personal data. It only stores your settings and a count of hidden posts.'
+    es: 'Sereno funciona 100% en tu navegador. No tiene servidores, no usa analítica y no recolecta datos personales. Solo guarda tus ajustes y un contador de publicaciones ocultas.',
+    en: 'Sereno runs 100% in your browser. It has no servers, no analytics and collects no personal data. It only stores your settings and a count of hidden posts.'
   },
   secAbout: { es: 'Acerca de', en: 'About' },
   aboutBody: {
-    es: 'Tidy Feed es un proyecto independiente. No está afiliado, respaldado ni patrocinado por LinkedIn Corporation. LinkedIn es una marca registrada de LinkedIn Corporation.',
-    en: 'Tidy Feed is an independent project. It is not affiliated with, endorsed or sponsored by LinkedIn Corporation. LinkedIn is a registered trademark of LinkedIn Corporation.'
+    es: 'Sereno es un proyecto independiente. No está afiliado, respaldado ni patrocinado por LinkedIn Corporation. LinkedIn es una marca registrada de LinkedIn Corporation.',
+    en: 'Sereno is an independent project. It is not affiliated with, endorsed or sponsored by LinkedIn Corporation. LinkedIn is a registered trademark of LinkedIn Corporation.'
   },
   aboutAds: {
-    es: 'Tidy Feed no oculta ni modifica la publicidad.',
-    en: 'Tidy Feed does not hide or alter ads.'
+    es: 'Sereno no oculta ni modifica la publicidad.',
+    en: 'Sereno does not hide or alter ads.'
   },
   resetDefaults: { es: 'Restablecer ajustes', en: 'Reset to defaults' },
   resetConfirm: { es: '¿Volver a los ajustes originales?', en: 'Go back to the original settings?' },

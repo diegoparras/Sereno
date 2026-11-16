@@ -1,4 +1,4 @@
-# Tidy Feed
+# Sereno
 
 > Tu feed de LinkedIn sin desconocidos, sin humo y sin números.
 
@@ -27,7 +27,7 @@ manifest.json
 src/
   content/detectors.js   lógica pura de clasificación (testeada en Node)
   content/content.js     aplica la lógica al DOM; selectores centralizados en SEL
-  content/content.css    estilos inyectados (prefijo tidy-)
+  content/content.css    estilos inyectados (prefijo sereno-)
   popup/                 popup de la barra
   options/               página de ajustes y bienvenida
   shared/settings.js     ajustes y estadísticas (chrome.storage)

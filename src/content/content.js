@@ -1,5 +1,5 @@
 /*
- * Tidy Feed — content script.
+ * Sereno — content script.
  *
  * Qué hace: lee lo que LinkedIn ya te muestra en pantalla y decide qué
  * publicaciones ocultar o atenuar, según tu configuración.
@@ -9,8 +9,8 @@
 (function () {
   'use strict';
 
-  const Detect = globalThis.TidyDetect;
-  const Settings = globalThis.TidySettings;
+  const Detect = globalThis.SerenoDetect;
+  const Settings = globalThis.SerenoSettings;
   if (!Detect || !Settings) return;
 
   const t = (key, subs) => {
@@ -66,7 +66,7 @@
     ].join(',')
   };
 
-  const ATTR = 'data-tidy';
+  const ATTR = 'data-sereno';
   let settings = Settings.DEFAULTS;
   let pending = false;
   const statsDelta = { network: 0, smoke: 0, muted: 0 };
@@ -126,23 +126,23 @@
   // ---------- aplicar / revertir ----------
 
   function reset(root) {
-    root.classList.remove('tidy-hidden', 'tidy-dim', 'tidy-labeled');
+    root.classList.remove('sereno-hidden', 'sereno-dim', 'sereno-labeled');
     root.removeAttribute(ATTR);
     const prev = root.previousElementSibling;
-    if (prev && prev.classList.contains('tidy-strip')) prev.remove();
+    if (prev && prev.classList.contains('sereno-strip')) prev.remove();
   }
 
   function makeStrip(root, result, kind) {
     const strip = document.createElement('div');
-    strip.className = `tidy-strip tidy-strip--${kind}`;
+    strip.className = `sereno-strip sereno-strip--${kind}`;
     strip.setAttribute('role', 'note');
 
     const mark = document.createElement('span');
-    mark.className = 'tidy-strip__mark';
+    mark.className = 'sereno-strip__mark';
     mark.setAttribute('aria-hidden', 'true');
 
     const label = document.createElement('span');
-    label.className = 'tidy-strip__label';
+    label.className = 'sereno-strip__label';
     label.textContent = kind === 'hidden' ? t('stripHidden', [reasonLabel(result)]) : t('stripSmoke', [reasonLabel(result)]);
 
     strip.append(mark, label);
@@ -150,12 +150,12 @@
     if (kind !== 'label') {
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'tidy-strip__btn';
+      btn.className = 'sereno-strip__btn';
       btn.textContent = t('stripShow');
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        root.setAttribute('data-tidy-revealed', '1');
+        root.setAttribute('data-sereno-revealed', '1');
         reset(root);
       });
       strip.append(btn);
@@ -178,7 +178,7 @@
   }
 
   function processPost(root) {
-    if (root.hasAttribute(ATTR) || root.hasAttribute('data-tidy-revealed')) return;
+    if (root.hasAttribute(ATTR) || root.hasAttribute('data-sereno-revealed')) return;
     const post = extract(root);
     // Todavía sin contenido (LinkedIn carga de a partes): reintentamos luego.
     if (!post.body && !post.header) return;
@@ -187,20 +187,20 @@
     root.setAttribute(ATTR, result.verdict);
     if (result.verdict === 'show') return;
 
-    const counted = root.hasAttribute('data-tidy-counted');
+    const counted = root.hasAttribute('data-sereno-counted');
     if (!counted) {
-      root.setAttribute('data-tidy-counted', '1');
+      root.setAttribute('data-sereno-counted', '1');
       count(result.category);
     }
 
     if (result.verdict === 'hide') {
-      root.classList.add('tidy-hidden');
+      root.classList.add('sereno-hidden');
       if (settings.display.showPlaceholders) makeStrip(root, result, 'hidden');
     } else if (result.verdict === 'dim') {
-      root.classList.add('tidy-dim');
+      root.classList.add('sereno-dim');
       makeStrip(root, result, 'dim');
     } else if (result.verdict === 'label') {
-      root.classList.add('tidy-labeled');
+      root.classList.add('sereno-labeled');
       makeStrip(root, result, 'label');
     }
   }
@@ -212,15 +212,15 @@
     scopes.push(...scope.querySelectorAll(SEL.metricScopes));
     for (const s of scopes) {
       for (const el of s.querySelectorAll('span, div, li, p')) {
-        if (el.childElementCount > 1 || el.hasAttribute('data-tidy-metric')) continue;
-        if (Detect.isMetricText(el.textContent)) el.setAttribute('data-tidy-metric', '');
+        if (el.childElementCount > 1 || el.hasAttribute('data-sereno-metric')) continue;
+        if (Detect.isMetricText(el.textContent)) el.setAttribute('data-sereno-metric', '');
       }
     }
   }
 
   function run(scope) {
     scope = scope || document;
-    document.documentElement.classList.toggle('tidy-no-metrics', settings.enabled && settings.metrics.enabled);
+    document.documentElement.classList.toggle('sereno-no-metrics', settings.enabled && settings.metrics.enabled);
     processMetrics(scope === document ? document.body || document.documentElement : scope);
     if (!settings.enabled || !onFeed()) return;
     for (const post of outermostPosts(scope === document ? document : scope)) processPost(post);
@@ -228,8 +228,8 @@
 
   function resetAll() {
     for (const el of document.querySelectorAll(`[${ATTR}]`)) reset(el);
-    for (const el of document.querySelectorAll('.tidy-strip')) el.remove();
-    for (const el of document.querySelectorAll('[data-tidy-metric]')) el.removeAttribute('data-tidy-metric');
+    for (const el of document.querySelectorAll('.sereno-strip')) el.remove();
+    for (const el of document.querySelectorAll('[data-sereno-metric]')) el.removeAttribute('data-sereno-metric');
   }
 
   function schedule() {
@@ -275,6 +275,6 @@
 
   // Mientras carga la config, aplicamos ya la clase de métricas por defecto
   // para evitar el "parpadeo" de números.
-  if (Settings.DEFAULTS.metrics.enabled) document.documentElement.classList.add('tidy-no-metrics');
+  if (Settings.DEFAULTS.metrics.enabled) document.documentElement.classList.add('sereno-no-metrics');
   start();
 })();
