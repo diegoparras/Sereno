@@ -1,0 +1,281 @@
+{
+  "extName": {
+    "message": "Tidy Feed"
+  },
+  "extDescription": {
+    "message": "Tu feed de LinkedIn sin desconocidos, sin humo y sin números. 100% en tu navegador."
+  },
+  "stripHidden": {
+    "message": "Oculto: $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "stripSmoke": {
+    "message": "Posible humo: $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "stripShow": {
+    "message": "Ver igual"
+  },
+  "reasonSuggested": {
+    "message": "contenido sugerido"
+  },
+  "reasonActivity": {
+    "message": "actividad de otra persona"
+  },
+  "reasonNotDirect": {
+    "message": "fuera de tus contactos directos"
+  },
+  "reasonPage": {
+    "message": "página de empresa"
+  },
+  "reasonMuted": {
+    "message": "menciona «$VALUE$»",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "smoke_bait": {
+    "message": "cebo de interacción"
+  },
+  "smoke_hook": {
+    "message": "gancho de plantilla"
+  },
+  "smoke_format": {
+    "message": "formato de plantilla"
+  },
+  "smoke_manual": {
+    "message": "frases de manual"
+  },
+  "smoke_hashtags": {
+    "message": "exceso de hashtags"
+  },
+  "popupOn": {
+    "message": "Activo"
+  },
+  "popupOff": {
+    "message": "En pausa"
+  },
+  "popupToggleLabel": {
+    "message": "Activar o pausar Tidy Feed"
+  },
+  "statCaption": {
+    "message": "publicaciones fuera de tu camino hoy"
+  },
+  "statNetwork": {
+    "message": "de desconocidos"
+  },
+  "statSmoke": {
+    "message": "humo"
+  },
+  "statMuted": {
+    "message": "silenciadas"
+  },
+  "statTotal": {
+    "message": "$VALUE$ en total desde que instalaste",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "featNetwork": {
+    "message": "Solo mi red"
+  },
+  "featNetworkDesc": {
+    "message": "Sin «le gustó», «comentó» ni sugeridos"
+  },
+  "featSmoke": {
+    "message": "Detector de humo"
+  },
+  "featSmokeDesc": {
+    "message": "Atenúa cebos y posts de plantilla"
+  },
+  "featMetrics": {
+    "message": "Sin números"
+  },
+  "featMetricsDesc": {
+    "message": "Oculta likes, vistas y seguidores"
+  },
+  "popupMore": {
+    "message": "Más ajustes"
+  },
+  "popupPrivacy": {
+    "message": "Todo queda en tu navegador"
+  },
+  "popupPausedHint": {
+    "message": "Tidy Feed está en pausa. LinkedIn se ve como siempre."
+  },
+  "optTitle": {
+    "message": "Ajustes"
+  },
+  "optTagline": {
+    "message": "Tu feed, sin ruido."
+  },
+  "welcomeTitle": {
+    "message": "Listo, Tidy Feed ya está trabajando"
+  },
+  "welcomeBody": {
+    "message": "Abre tu feed de LinkedIn y vas a notar la diferencia. Viene configurado con valores razonables; aquí puedes ajustarlo a tu gusto."
+  },
+  "welcomeCta": {
+    "message": "Abrir LinkedIn"
+  },
+  "saved": {
+    "message": "Guardado"
+  },
+  "secNetwork": {
+    "message": "Solo mi red"
+  },
+  "secNetworkDesc": {
+    "message": "Vuelve a ver a la gente que conoces."
+  },
+  "optHideActivity": {
+    "message": "Ocultar actividad ajena"
+  },
+  "optHideActivityDesc": {
+    "message": "Publicaciones que aparecen porque a alguien le gustaron, las comentó o las compartió."
+  },
+  "optHideSuggested": {
+    "message": "Ocultar sugeridos"
+  },
+  "optHideSuggestedDesc": {
+    "message": "«Sugerido», «Recomendado para ti» y similares."
+  },
+  "optOnlyDirect": {
+    "message": "Modo estricto: solo contactos directos"
+  },
+  "optOnlyDirectDesc": {
+    "message": "También oculta publicaciones de 2.º y 3.er grado. Si no se puede saber el grado, se muestra."
+  },
+  "optKeepPages": {
+    "message": "Mantener páginas de empresas que sigues"
+  },
+  "secSmoke": {
+    "message": "Detector de humo"
+  },
+  "secSmokeDesc": {
+    "message": "Busca señales de contenido hecho para enganchar, no para aportar. Son reglas simples que corren en tu navegador, sin enviar nada a ninguna IA."
+  },
+  "optSensitivity": {
+    "message": "Sensibilidad"
+  },
+  "sensLow": {
+    "message": "Suave"
+  },
+  "sensMedium": {
+    "message": "Equilibrada"
+  },
+  "sensHigh": {
+    "message": "Estricta"
+  },
+  "optAction": {
+    "message": "Qué hacer con el humo"
+  },
+  "actLabel": {
+    "message": "Solo marcar"
+  },
+  "actDim": {
+    "message": "Atenuar"
+  },
+  "actHide": {
+    "message": "Ocultar"
+  },
+  "smokeWhat": {
+    "message": "Qué cuenta como humo"
+  },
+  "smokeDesc_bait": {
+    "message": "«Comenta SÍ y te mando el PDF», «Repost ♻️», «¿Estás de acuerdo?»"
+  },
+  "smokeDesc_hook": {
+    "message": "«Hace 5 años me despidieron…», «Opinión impopular», «Léelo de nuevo»"
+  },
+  "smokeDesc_format": {
+    "message": "Una frase por renglón y catarata de emojis como viñetas"
+  },
+  "smokeDesc_manual": {
+    "message": "«Game changer», «en el mundo actual», «no se trata de X, se trata de Y»"
+  },
+  "smokeDesc_hashtags": {
+    "message": "Seis hashtags o más"
+  },
+  "secMetrics": {
+    "message": "Sin números"
+  },
+  "secMetricsDesc": {
+    "message": "Lee el contenido, no el marcador."
+  },
+  "optMetrics": {
+    "message": "Ocultar likes, comentarios, vistas y seguidores"
+  },
+  "secMuted": {
+    "message": "Palabras silenciadas"
+  },
+  "secMutedDesc": {
+    "message": "Oculta publicaciones que mencionen estas palabras o frases."
+  },
+  "mutedPlaceholder": {
+    "message": "Escribe una palabra y presiona Enter"
+  },
+  "mutedEmpty": {
+    "message": "Todavía no silenciaste nada."
+  },
+  "mutedAdd": {
+    "message": "Agregar"
+  },
+  "mutedRemove": {
+    "message": "Quitar «$VALUE$»",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "secDisplay": {
+    "message": "Transparencia"
+  },
+  "optPlaceholders": {
+    "message": "Dejar un aviso donde se ocultó algo"
+  },
+  "optPlaceholdersDesc": {
+    "message": "Una línea discreta con el motivo y un botón para verlo igual."
+  },
+  "secPrivacy": {
+    "message": "Privacidad"
+  },
+  "privacyBody": {
+    "message": "Tidy Feed funciona 100% en tu navegador. No tiene servidores, no usa analítica y no recolecta datos personales. Solo guarda tus ajustes y un contador de publicaciones ocultas."
+  },
+  "secAbout": {
+    "message": "Acerca de"
+  },
+  "aboutBody": {
+    "message": "Tidy Feed es un proyecto independiente. No está afiliado, respaldado ni patrocinado por LinkedIn Corporation. LinkedIn es una marca registrada de LinkedIn Corporation."
+  },
+  "aboutAds": {
+    "message": "Tidy Feed no oculta ni modifica la publicidad."
+  },
+  "resetDefaults": {
+    "message": "Restablecer ajustes"
+  },
+  "resetConfirm": {
+    "message": "¿Volver a los ajustes originales?"
+  },
+  "version": {
+    "message": "Versión $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  }
+}

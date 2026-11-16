@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tidy Feed</title>
+    <link rel="stylesheet" href="../shared/ui.css" />
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <div class="brand brand--lg">
+          <img src="../../icons/icon-128.png" alt="" />
+          <div>
+            <div data-i18n="extName">Tidy Feed</div>
+            <div class="hero__tagline" data-i18n="optTagline"></div>
+          </div>
+        </div>
+        <div class="toast" id="toast" role="status" aria-live="polite" data-i18n="saved" hidden></div>
+      </header>
+
+      <section class="welcome" id="welcome" hidden>
+        <div>
+          <h2 data-i18n="welcomeTitle"></h2>
+          <p data-i18n="welcomeBody"></p>
+        </div>
+        <a class="btn btn--primary" href="https://www.linkedin.com/feed/" target="_blank" rel="noopener" data-i18n="welcomeCta"></a>
+      </section>
+
+      <!-- Solo mi red -->
+      <section class="card">
+        <div class="card__head">
+          <div>
+            <h2 data-i18n="secNetwork"></h2>
+            <p data-i18n="secNetworkDesc"></p>
+          </div>
+          <label class="switch"><input type="checkbox" data-setting="network.enabled" data-i18n-aria-label="secNetwork" /><span class="switch__track"></span></label>
+        </div>
+        <div class="rows" data-depends="network.enabled">
+          <label class="row">
+            <span class="row__text"><span class="row__title" data-i18n="optHideActivity"></span><span class="row__desc" data-i18n="optHideActivityDesc"></span></span>
+            <span class="switch"><input type="checkbox" data-setting="network.hideSocialActivity" /><span class="switch__track"></span></span>
+          </label>
+          <label class="row">
+            <span class="row__text"><span class="row__title" data-i18n="optHideSuggested"></span><span class="row__desc" data-i18n="optHideSuggestedDesc"></span></span>
+            <span class="switch"><input type="checkbox" data-setting="network.hideSuggested" /><span class="switch__track"></span></span>
+          </label>
+          <label class="row">
+            <span class="row__text"><span class="row__title" data-i18n="optOnlyDirect"></span><span class="row__desc" data-i18n="optOnlyDirectDesc"></span></span>
+            <span class="switch"><input type="checkbox" data-setting="network.onlyDirect" /><span class="switch__track"></span></span>
+          </label>
+          <label class="row row--sub" data-depends="network.onlyDirect">
+            <span class="row__text"><span class="row__title" data-i18n="optKeepPages"></span></span>
+            <span class="switch"><input type="checkbox" data-setting="network.keepFollowedPages" /><span class="switch__track"></span></span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Detector de humo -->
+      <section class="card">
+        <div class="card__head">
+          <div>
+            <h2 data-i18n="secSmoke"></h2>
+            <p data-i18n="secSmokeDesc"></p>
+          </div>
+          <label class="switch"><input type="checkbox" data-setting="smoke.enabled" data-i18n-aria-label="secSmoke" /><span class="switch__track"></span></label>
+        </div>
+        <div class="rows" data-depends="smoke.enabled">
+          <div class="row">
+            <span class="row__title" id="lblSens" data-i18n="optSensitivity"></span>
+            <div class="segmented" role="radiogroup" aria-labelledby="lblSens">
+              <label><input type="radio" name="smoke.sensitivity" value="low" /><span data-i18n="sensLow"></span></label>
+              <label><input type="radio" name="smoke.sensitivity" value="medium" /><span data-i18n="sensMedium"></span></label>
+              <label><input type="radio" name="smoke.sensitivity" value="high" /><span data-i18n="sensHigh"></span></label>
+            </div>
+          </div>
+          <div class="row">
+            <span class="row__title" id="lblAct" data-i18n="optAction"></span>
+            <div class="segmented" role="radiogroup" aria-labelledby="lblAct">
+              <label><input type="radio" name="smoke.action" value="label" /><span data-i18n="actLabel"></span></label>
+              <label><input type="radio" name="smoke.action" value="dim" /><span data-i18n="actDim"></span></label>
+              <label><input type="radio" name="smoke.action" value="hide" /><span data-i18n="actHide"></span></label>
+            </div>
+          </div>
+          <details class="explain">
+            <summary data-i18n="smokeWhat"></summary>
+            <dl>
+              <div><dt data-i18n="smoke_bait"></dt><dd data-i18n="smokeDesc_bait"></dd></div>
+              <div><dt data-i18n="smoke_hook"></dt><dd data-i18n="smokeDesc_hook"></dd></div>
+              <div><dt data-i18n="smoke_format"></dt><dd data-i18n="smokeDesc_format"></dd></div>
+              <div><dt data-i18n="smoke_manual"></dt><dd data-i18n="smokeDesc_manual"></dd></div>
+              <div><dt data-i18n="smoke_hashtags"></dt><dd data-i18n="smokeDesc_hashtags"></dd></div>
+            </dl>
+          </details>
+        </div>
+      </section>
+
+      <!-- Sin números -->
+      <section class="card">
+        <div class="card__head">
+          <div>
+            <h2 data-i18n="secMetrics"></h2>
+            <p data-i18n="secMetricsDesc"></p>
+          </div>
+          <label class="switch"><input type="checkbox" data-setting="metrics.enabled" data-i18n-aria-label="optMetrics" /><span class="switch__track"></span></label>
+        </div>
+      </section>
+
+      <!-- Palabras silenciadas -->
+      <section class="card">
+        <div class="card__head">
+          <div>
+            <h2 data-i18n="secMuted"></h2>
+            <p data-i18n="secMutedDesc"></p>
+          </div>
+        </div>
+        <form class="muted-form" id="mutedForm">
+          <input type="text" id="mutedInput" maxlength="60" autocomplete="off" data-i18n-placeholder="mutedPlaceholder" data-i18n-aria-label="secMuted" />
+          <button type="submit" class="btn" data-i18n="mutedAdd"></button>
+        </form>
+        <ul class="tags" id="mutedList"></ul>
+        <p class="empty muted" id="mutedEmpty" data-i18n="mutedEmpty"></p>
+      </section>
+
+      <!-- Transparencia -->
+      <section class="card">
+        <label class="card__head">
+          <div>
+            <h2 data-i18n="secDisplay"></h2>
+            <p><span data-i18n="optPlaceholders"></span>. <span data-i18n="optPlaceholdersDesc"></span></p>
+          </div>
+          <span class="switch"><input type="checkbox" data-setting="display.showPlaceholders" data-i18n-aria-label="optPlaceholders" /><span class="switch__track"></span></span>
+        </label>
+      </section>
+
+      <!-- Privacidad y acerca de -->
+      <section class="card card--quiet">
+        <h2 data-i18n="secPrivacy"></h2>
+        <p data-i18n="privacyBody"></p>
+        <h2 data-i18n="secAbout"></h2>
+        <p data-i18n="aboutBody"></p>
+        <p data-i18n="aboutAds"></p>
+        <div class="foot">
+          <span class="muted" id="version"></span>
+          <button type="button" class="btn btn--ghost" id="reset" data-i18n="resetDefaults"></button>
+        </div>
+      </section>
+    </div>
+    <script src="../shared/settings.js"></script>
+    <script src="../shared/ui.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

@@ -1,0 +1,50 @@
+# Política de privacidad — Tidy Feed
+
+_Última actualización: 16 de noviembre de 2026_
+
+**Resumen: Tidy Feed no recolecta, no vende y no envía tus datos a ningún lado.**
+
+## Qué hace la extensión
+Tidy Feed lee las publicaciones que LinkedIn ya te muestra en tu navegador para decidir, según tus ajustes, cuáles ocultar o atenuar. Ese análisis ocurre **solo dentro de tu navegador**.
+
+## Qué datos guarda
+Usa el almacenamiento de Chrome (`chrome.storage`) para guardar únicamente:
+- **Tus ajustes**: qué funciones están activas y tu lista de palabras silenciadas. Si tienes activada la sincronización de Chrome, Google sincroniza estos ajustes entre tus dispositivos.
+- **Contadores anónimos**: cuántas publicaciones se ocultaron hoy y en total. Son solo números, sin contenido, autores ni enlaces.
+
+## Qué no hace
+- No envía información a servidores propios ni de terceros. Tidy Feed no tiene servidores.
+- No usa analítica, cookies de seguimiento ni publicidad.
+- No guarda el contenido de las publicaciones, nombres, perfiles ni mensajes.
+- No hace acciones en tu nombre (no da likes, no comenta, no envía mensajes).
+- No modifica ni oculta la publicidad de LinkedIn.
+
+## Permisos
+- `storage`: guardar tus ajustes y los contadores.
+- Acceso a `https://www.linkedin.com/*`: necesario para ordenar el feed en esa página. No tiene acceso a ningún otro sitio.
+
+## Borrar tus datos
+Desinstalar la extensión elimina todo lo que guardó. También puedes usar «Restablecer ajustes» en la página de opciones.
+
+## Contacto
+[COMPLETAR: email de contacto del desarrollador]
+
+---
+
+# Privacy policy — Tidy Feed
+
+_Last updated: November 16, 2026_
+
+**In short: Tidy Feed does not collect, sell or send your data anywhere.**
+
+Tidy Feed reads the posts LinkedIn already shows you in your browser to decide, based on your settings, which to hide or dim. This happens **only inside your browser**.
+
+It stores, via `chrome.storage`, only your **settings** (enabled features and muted words; synced by Chrome if you have sync on) and **anonymous counters** of hidden posts (numbers only, no content, authors or links).
+
+It does not send data to any server (it has none), use analytics or tracking, store post content or profiles, act on your behalf, or modify LinkedIn ads.
+
+Permissions: `storage` (settings and counters) and access to `https://www.linkedin.com/*` (to tidy the feed on that site only).
+
+Uninstalling the extension removes all stored data.
+
+Contact: [FILL IN: developer contact email]
