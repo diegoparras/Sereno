@@ -101,6 +101,19 @@
     return Array.from(el.querySelectorAll(SEL.postHeading)).filter(isPostHeading);
   }
 
+  /**
+   * El elemento que de verdad se dibuja. Los envoltorios de LinkedIn usan
+   * `display: contents` (no tienen caja: miden 0×0 y no aceptan opacidad ni
+   * filtros), así que para medir y para efectos visuales usamos la tarjeta.
+   */
+  function boxOf(el) {
+    if (!el || getComputedStyle(el).display !== 'contents') return el;
+    const card = el.querySelector('[role="listitem"]');
+    if (card && getComputedStyle(card).display !== 'contents') return card;
+    for (const c of el.querySelectorAll('*')) if (getComputedStyle(c).display !== 'contents') return c;
+    return el;
+  }
+
   function hasContent(el) {
     return (el.textContent || '').trim().length > 0 || !!el.querySelector('img, video, svg, iframe');
   }
@@ -234,6 +247,8 @@
 
   function reset(root) {
     root.classList.remove('sereno-hidden', 'sereno-dim', 'sereno-labeled', 'sereno-walled');
+    const box = boxOf(root);
+    if (box && box !== root) box.classList.remove('sereno-dim', 'sereno-labeled', 'sereno-walled');
     root.removeAttribute(ATTR);
     root.removeAttribute('data-sereno-len');
     root.removeAttribute('data-sereno-visible');
@@ -339,10 +354,10 @@
       return;
     }
     if (result.verdict === 'dim') {
-      root.classList.add('sereno-dim');
+      boxOf(root).classList.add('sereno-dim');
       makeStrip(root, result, 'dim');
     } else if (result.verdict === 'label') {
-      root.classList.add('sereno-labeled');
+      boxOf(root).classList.add('sereno-labeled');
       makeStrip(root, result, 'label');
     }
 
@@ -404,7 +419,7 @@
     const line = TOP + (vh - TOP) * 0.4;
     const candidates = Array.from(document.querySelectorAll('[data-sereno-author]')).filter((p) => {
       const v = p.getAttribute(ATTR);
-      return v && v !== 'hide' && !p.classList.contains('sereno-walled');
+      return v && v !== 'hide' && !boxOf(p).classList.contains('sereno-walled');
     });
     // "Arriba de todo" = ningún contenedor del feed está desplazado. LinkedIn
     // hace scroll en un contenedor interno, así que window.scrollY no alcanza.
@@ -412,7 +427,7 @@
     let best = null;
     let bestDist = Infinity;
     for (const p of candidates) {
-      const r = p.getBoundingClientRect();
+      const r = boxOf(p).getBoundingClientRect();
       if (r.height === 0 || r.bottom <= TOP || r.top >= vh) continue;
       // Arriba de todo de la página, se está leyendo el primer post visible.
       if (atTop) return p;
@@ -445,7 +460,7 @@
       dock.btn.setAttribute('aria-label', t('menuOpen', [name]));
       dock.btn.title = t('menuOpen', [name]);
     }
-    const r = post.getBoundingClientRect();
+    const r = boxOf(post).getBoundingClientRect();
     const vh = window.innerHeight;
     const SIZE = 28;
     // Al costado derecho de la tarjeta, en el margen; si no hay lugar, adentro.
@@ -561,7 +576,8 @@
           (entries) => {
             for (const en of entries) {
               if (!en.isIntersecting) continue;
-              const h = en.target.getAttribute('data-sereno-hash');
+              const holder = en.target.closest('[data-sereno-hash]');
+              const h = holder && holder.getAttribute('data-sereno-hash');
               if (h && !seenBefore.has(h)) seenQueue.add(h);
               io.unobserve(en.target);
             }
@@ -584,11 +600,11 @@
     if (root.hasAttribute('data-sereno-visible')) return;
     root.setAttribute('data-sereno-visible', '1');
     root.setAttribute('data-sereno-hash', hash);
-    if (io) io.observe(root);
+    if (io) io.observe(boxOf(root));
 
     if (caught.card) {
       // Todo lo que viene después de la tarjeta queda en pausa.
-      root.classList.add('sereno-walled');
+      boxOf(root).classList.add('sereno-walled');
       return;
     }
     const cfg = settings.caughtUp;
@@ -601,10 +617,10 @@
     if (caught.oldRun.length >= OLD_RUN) {
       const first = caught.oldRun[0];
       placeCard(first, 'old', caught.visible - caught.oldRun.length);
-      for (const r of caught.oldRun) r.classList.add('sereno-walled');
+      for (const r of caught.oldRun) boxOf(r).classList.add('sereno-walled');
     } else if (cfg.limit > 0 && caught.visible > cfg.limit) {
       placeCard(root, 'limit', cfg.limit);
-      root.classList.add('sereno-walled');
+      boxOf(root).classList.add('sereno-walled');
     }
   }
 

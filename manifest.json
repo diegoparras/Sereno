@@ -3,7 +3,7 @@
   "name": "__MSG_extName__",
   "short_name": "Sereno",
   "description": "__MSG_extDescription__",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "default_locale": "es",
   "icons": {
     "16": "icons/icon-16.png",

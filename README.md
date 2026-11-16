@@ -55,6 +55,7 @@ Los textos se editan en `scripts/strings.mjs`, nunca a mano en `_locales/`. Los 
 ## Cuando LinkedIn cambie su HTML
 Se va a romper cada tanto, es inevitable. Desde noviembre de 2026 LinkedIn usa clases generadas (`k4dl5v`, `k4dayy`…) que cambian con cada versión, así que Sereno **no las usa**. Se apoya en lo más estable:
 - el título oculto de cada publicación ("Publicación en el feed"),
+- los envoltorios de LinkedIn usan `display: contents` (no tienen caja): para medir y para efectos visuales se usa la tarjeta interna (`boxOf`),
 - `data-testid="expandable-text-box"` para el texto,
 - `aria-label` de los botones y textos visibles ("Promocionado", "sigue esta página", "614 reacciones").
 

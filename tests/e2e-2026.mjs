@@ -41,7 +41,7 @@ const state = await page.evaluate(() =>
       actor: w.querySelector('.k4dname')?.textContent || '(cargando)',
       verdict: w.getAttribute('data-sereno'),
       hidden: getComputedStyle(w).display === 'none',
-      dim: w.classList.contains('sereno-dim'),
+      dim: w.classList.contains('sereno-dim') || !!w.querySelector('.sereno-dim'),
       botones: btnNums,
       seguidores: followers ? (vis(followers) ? 'visible' : 'oculto') : '-',
       reacciones: reactions ? (vis(reactions) ? 'visible' : 'oculto') : '-'

@@ -37,7 +37,8 @@ const page = await ctx.newPage();
 const wrapperOf = (name) => page.locator('[data-lazy-mount-id]', { has: page.locator('.k4dname', { hasText: name }) });
 const isHidden = (name) => wrapperOf(name).evaluate((w) => getComputedStyle(w).display === 'none');
 const focus = async (name) => {
-  await wrapperOf(name).evaluate((w) => w.scrollIntoView({ block: 'center' }));
+  // Los envoltorios usan display: contents (sin caja): se scrollea la tarjeta.
+  await wrapperOf(name).evaluate((w) => (w.querySelector('[role="listitem"]') || w).scrollIntoView({ block: 'center' }));
   // En headless Chrome casi no produce cuadros, así que los eventos de scroll
   // llegan tarde; el respaldo de 500 ms de Sereno lo cubre.
   await page.waitForTimeout(700);
@@ -66,7 +67,7 @@ assert.equal(await dockBtn.isVisible(), true, 'control siempre visible');
 assert.match(await dockBtn.getAttribute('aria-label'), /Marta Ruiz/);
 const geo = await page.evaluate(() => {
   const b = document.querySelector('.sereno-dock__btn').getBoundingClientRect();
-  const card = Array.from(document.querySelectorAll('.k4dname')).find((e) => e.textContent === 'Marta Ruiz').closest('[data-sereno]').getBoundingClientRect();
+  const card = Array.from(document.querySelectorAll('.k4dname')).find((e) => e.textContent === 'Marta Ruiz').closest('[role="listitem"]').getBoundingClientRect();
   return { outside: b.left >= card.right, alignedTop: b.top >= card.top && b.top <= card.top + 40, b: [b.left, b.top], c: [card.top, card.right] };
 });
 assert.deepEqual({ outside: geo.outside, alignedTop: geo.alignedTop }, { outside: true, alignedTop: true }, 'en el margen, a la altura del post');
@@ -98,11 +99,12 @@ console.log('✔ silenciar y deshacer');
 
 // ---------- 2. Proteger a alguien atenuado como humo ----------
 const pablo = wrapperOf('Pablo Vega');
-assert.equal(await pablo.evaluate((w) => w.classList.contains('sereno-dim')), true);
+const isDim = (w) => w.classList.contains('sereno-dim') || !!w.querySelector('.sereno-dim');
+assert.equal(await pablo.evaluate(isDim), true);
 await openDock('Pablo Vega');
 await menu.locator('.sereno-menu__item', { hasText: 'Nunca ocultar' }).click();
 await page.waitForTimeout(500);
-assert.equal(await pablo.evaluate((w) => w.classList.contains('sereno-dim')), false, 'protegido ya no se atenúa');
+assert.equal(await pablo.evaluate(isDim), false, 'protegido ya no se atenúa');
 await openDock('Pablo Vega');
 assert.deepEqual(await menu.locator('.sereno-menu__item').allTextContents(), ['Volver a filtrar a Pablo Vega', 'Silenciar a Pablo Vega']);
 await page.keyboard.press('Escape');
@@ -137,8 +139,7 @@ console.log('✔ pausa por límite y "Seguir viendo"');
 await setSettings({ caughtUp: { enabled: true, limit: 0 } });
 // Recorrer el feed para que Sereno registre lo visto
 for (const name of ['Planeta Agua', 'Marta Ruiz', 'Pablo Vega']) {
-  await wrapperOf(name).scrollIntoViewIfNeeded();
-  await page.waitForTimeout(250);
+  await focus(name);
 }
 await page.waitForTimeout(2600); // se guarda cada 2 s
 const seen = await sw.evaluate(async () => Object.keys((await chrome.storage.local.get('serenoSeen')).serenoSeen || {}).length);
