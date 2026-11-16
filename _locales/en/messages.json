@@ -170,7 +170,7 @@
     "message": "People and pages"
   },
   "secPeopleDesc": {
-    "message": "Hover over a post and use the Sereno button to mute someone or to never hide them."
+    "message": "The Sereno button follows the post you are reading, beside the feed: use it to mute someone or to never hide them."
   },
   "peopleMuted": {
     "message": "Muted"

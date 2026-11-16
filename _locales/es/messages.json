@@ -170,7 +170,7 @@
     "message": "Personas y páginas"
   },
   "secPeopleDesc": {
-    "message": "Pasa el mouse por una publicación y usa el botón de Sereno para silenciar a alguien o para que nunca se oculte."
+    "message": "El botón de Sereno acompaña, al costado del feed, a la publicación que estás leyendo: úsalo para silenciar a alguien o para que nunca se oculte."
   },
   "peopleMuted": {
     "message": "Silenciadas"

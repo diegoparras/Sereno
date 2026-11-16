@@ -28,6 +28,7 @@
     /\b(like|likes|love|loves|celebrate|celebrates|support|supports|find|finds|reacted to|commented on|replied to|reposted|shared)\b[^\n]{0,40}\bthis\b/,
     /\bcommented on\b|\breposted\b/,
     /\bfollows? (this page|this company|this)\b/,
+    /^followed by\b/,
     // Español
     /\b(le|les) (gusta|gustan|gusto|encanta|encanto|parece|parecio)\b/,
     /\b(celebra|celebran|apoya|apoyan|recomienda|recomiendan) esto\b/,
@@ -35,6 +36,7 @@
     /\b(comento|comentaron|compartio|compartieron|republico|republicaron|reacciono|reaccionaron|respondio)\b/,
     /\ble resulta (interesante|divertido|curioso)\b/,
     /\b(sigue|siguen) (esta pagina|esta empresa|esto)\b/,
+    /^seguid[oa] por\b/,
     /\b(le|les) ha(n)? (gustado|encantado|parecido)\b/,
     // Português
     /\b(gostou|gostaram|amou|celebrou|apoiou|comentou|compartilhou|republicou|reagiu|achou isso)\b/,

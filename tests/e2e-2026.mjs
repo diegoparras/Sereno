@@ -51,6 +51,19 @@ const state = await page.evaluate(() =>
 console.table(state);
 const by = Object.fromEntries(state.map((s) => [s.actor, s]));
 
+// La caja "Crear publicación" nunca se toca, y el post "Seguido por…" que comparte envoltorio se oculta solo
+const share = await page.evaluate(() => {
+  const el = document.getElementById('sharebox');
+  return { visible: getComputedStyle(el).display !== 'none', marked: !!el.closest('[data-sereno]') };
+});
+assert.deepEqual(share, { visible: true, marked: false }, 'caja de publicar intacta');
+const masa = await page.evaluate(() => {
+  const n = Array.from(document.querySelectorAll('.k4dname')).find((e) => e.textContent === 'Masa Otake');
+  const w = n.closest('[data-sereno]');
+  return { verdict: w.getAttribute('data-sereno'), includesShareBox: w.contains(document.getElementById('sharebox')) };
+});
+assert.equal(masa.verdict, 'hide', '"Seguido por" se oculta');
+assert.equal(masa.includesShareBox, false, 'el envoltorio no abarca la caja de publicar');
 assert.equal(by['Planeta Agua'].hidden, false, 'publicidad intacta');
 assert.equal(by['Planeta Agua'].verdict, 'show');
 assert.equal(by['Planeta Agua'].seguidores, 'oculto', 'seguidores ocultos');
@@ -68,7 +81,7 @@ assert.ok(feedVisible, 'el contenedor del feed sigue visible');
 await page.waitForTimeout(1500);
 const stats = await sw.evaluate(async () => (await chrome.storage.local.get('serenoStats')).serenoStats);
 console.log('stats', stats);
-assert.equal(stats.network, 3);
+assert.equal(stats.network, 4);
 assert.equal(stats.smoke, 1);
 console.log('✔ e2e 2026 ok');
 

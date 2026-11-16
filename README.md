@@ -13,7 +13,7 @@ Extensión de Chrome (Manifest V3). Funciona 100% en el navegador: sin servidore
 | **Detector de humo** | Marca, atenúa u oculta cebos de interacción, historias de plantilla y posts de una frase por renglón. |
 | **Sin números** | Oculta likes, comentarios y contadores de seguidores. |
 | **Palabras silenciadas** | Oculta posts que mencionan temas que no quieres ver. |
-| **Control por persona** | Al pasar el mouse por un post: «Silenciar a X» o «Nunca ocultar a X». Protegido le gana a cualquier filtro. |
+| **Control por persona** | Un botón siempre visible, al costado del feed, sigue al post que estás leyendo (el que cruza la línea de lectura). Ofrece «Silenciar a X» o «Nunca ocultar a X». Protegido le gana a cualquier filtro. |
 | **Ya estás al día** | Tarjeta que corta el scroll cuando empiezas a ver posts que ya viste (3 seguidos) o después de N posts por visita (25 por defecto). Lo que sigue se desenfoca, sin ocultarse, para que LinkedIn no cargue más sin parar. |
 
 Regla fija: **nunca toca la publicidad** (ver [docs/LEGAL.md](docs/LEGAL.md)).
@@ -65,7 +65,7 @@ Todo lo que depende del HTML está en el objeto `SEL` de `src/content/content.js
 ## Estado
 - [x] MVP funcional con tests unitarios (22) y e2e (feed clásico, feed 2026 y funciones)
 - [x] Control por persona y «Ya estás al día» (v0.2.0)
-- [ ] Ajustar la posición del botón de Sereno en el LinkedIn real si choca con los botones de LinkedIn
+- [x] Botón flotante que sigue al post en foco (v0.2.1)
 - [x] Adaptado al feed de LinkedIn de nov. 2026 (a partir de un diagnóstico real)
 - [ ] Confirmar en el LinkedIn real después del ajuste
 - [ ] Definir el nombre definitivo (ver docs/LEGAL.md)

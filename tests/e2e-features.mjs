@@ -36,6 +36,17 @@ const setSettings = (patch) =>
 const page = await ctx.newPage();
 const wrapperOf = (name) => page.locator('[data-lazy-mount-id]', { has: page.locator('.k4dname', { hasText: name }) });
 const isHidden = (name) => wrapperOf(name).evaluate((w) => getComputedStyle(w).display === 'none');
+const focus = async (name) => {
+  await wrapperOf(name).evaluate((w) => w.scrollIntoView({ block: 'center' }));
+  // En headless Chrome casi no produce cuadros, así que los eventos de scroll
+  // llegan tarde; el respaldo de 500 ms de Sereno lo cubre.
+  await page.waitForTimeout(700);
+};
+const dockBtn = page.locator('.sereno-dock__btn');
+const openDock = async (name) => {
+  await focus(name);
+  await dockBtn.click();
+};
 
 // Sin límite para probar primero el menú
 await setSettings({ caughtUp: { enabled: true, limit: 0 } });
@@ -43,14 +54,28 @@ await page.goto('https://www.linkedin.com/feed/');
 await page.waitForTimeout(1500);
 
 // ---------- 1. Silenciar con un clic ----------
-const marta = wrapperOf('Marta Ruiz');
-await marta.hover();
-await marta.locator('.sereno-ctl__btn').click();
-const items = await marta.locator('.sereno-menu__item').allTextContents();
+// El control está siempre visible y sigue a la publicación en foco
+await focus('Marta Ruiz');
+assert.equal(await dockBtn.isVisible(), true, 'control siempre visible');
+assert.match(await dockBtn.getAttribute('aria-label'), /Marta Ruiz/);
+const geo = await page.evaluate(() => {
+  const b = document.querySelector('.sereno-dock__btn').getBoundingClientRect();
+  const card = Array.from(document.querySelectorAll('.k4dname')).find((e) => e.textContent === 'Marta Ruiz').closest('[data-sereno]').getBoundingClientRect();
+  return { outside: b.left >= card.right, alignedTop: b.top >= card.top && b.top <= card.top + 40, b: [b.left, b.top], c: [card.top, card.right] };
+});
+assert.deepEqual({ outside: geo.outside, alignedTop: geo.alignedTop }, { outside: true, alignedTop: true }, 'en el margen, a la altura del post');
+await focus('Pablo Vega');
+assert.match(await dockBtn.getAttribute('aria-label'), /Pablo Vega/, 'cambia al post en foco');
+await focus('Planeta Agua');
+assert.match(await dockBtn.getAttribute('aria-label'), /Planeta Agua/);
+
+await openDock('Marta Ruiz');
+const menu = page.locator('.sereno-menu');
+const items = await menu.locator('.sereno-menu__item').allTextContents();
 console.log('menú:', items);
 assert.deepEqual(items, ['Nunca ocultar a Marta Ruiz', 'Silenciar a Marta Ruiz']);
-if (shots) await marta.screenshot({ path: join(shotDir, 'menu.png') });
-await marta.locator('.sereno-menu__item', { hasText: 'Silenciar' }).click();
+if (shots) await page.screenshot({ path: join(shotDir, 'menu.png'), clip: { x: 300, y: 150, width: 700, height: 420 } });
+await menu.locator('.sereno-menu__item', { hasText: 'Silenciar' }).click();
 await page.waitForTimeout(500);
 assert.equal(await isHidden('Marta Ruiz'), true, 'Marta silenciada');
 const strip = page.locator('.sereno-strip--muted-person');
@@ -68,15 +93,14 @@ console.log('✔ silenciar y deshacer');
 // ---------- 2. Proteger a alguien atenuado como humo ----------
 const pablo = wrapperOf('Pablo Vega');
 assert.equal(await pablo.evaluate((w) => w.classList.contains('sereno-dim')), true);
-await pablo.hover();
-await pablo.locator('.sereno-ctl__btn').click();
-await pablo.locator('.sereno-menu__item', { hasText: 'Nunca ocultar' }).click();
+await openDock('Pablo Vega');
+await menu.locator('.sereno-menu__item', { hasText: 'Nunca ocultar' }).click();
 await page.waitForTimeout(500);
 assert.equal(await pablo.evaluate((w) => w.classList.contains('sereno-dim')), false, 'protegido ya no se atenúa');
-await pablo.hover();
-await pablo.locator('.sereno-ctl__btn').click();
-assert.deepEqual(await pablo.locator('.sereno-menu__item').allTextContents(), ['Volver a filtrar a Pablo Vega', 'Silenciar a Pablo Vega']);
+await openDock('Pablo Vega');
+assert.deepEqual(await menu.locator('.sereno-menu__item').allTextContents(), ['Volver a filtrar a Pablo Vega', 'Silenciar a Pablo Vega']);
 await page.keyboard.press('Escape');
+assert.equal(await menu.count(), 0, 'Escape cierra el menú');
 console.log('✔ proteger');
 
 // La publicidad no tiene menú de Sereno ni se toca (sí puede tenerlo: es visible, pero la regla de publicidad gana)

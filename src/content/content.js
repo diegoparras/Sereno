@@ -32,7 +32,6 @@
     postHeading: 'h2',
     // Envoltorios candidatos para ocultar una publicación entera, del más
     // externo al más interno. Se elige el primero que contenga UNA sola publicación.
-    postWrappers: ['[data-lazy-mount-id]', '[componentkey^="expanded"]', '[role="listitem"]'],
     // HTML clásico (versiones anteriores de LinkedIn)
     legacyPost: [
       '[data-id^="urn:li:activity:"]',
@@ -102,19 +101,26 @@
     return Array.from(el.querySelectorAll(SEL.postHeading)).filter(isPostHeading);
   }
 
-  /** Envoltorio más externo que contiene una sola publicación. */
+  function hasContent(el) {
+    return (el.textContent || '').trim().length > 0 || !!el.querySelector('img, video, svg, iframe');
+  }
+
+  /**
+   * Envoltorio de una publicación: parte de su tarjeta ([role=listitem]) y sube
+   * solo mientras los hermanos estén vacíos (cajas de comentarios sin abrir,
+   * separadores). Nunca sube más de 5 niveles ni pasa del envoltorio de carga
+   * diferida, para no abarcar la caja de "Crear publicación" u otros posts.
+   */
   function wrapperFor(heading) {
-    for (const sel of SEL.postWrappers) {
-      const w = heading.closest(sel);
-      if (w && headingsIn(w).length === 1) return w;
-    }
-    // Último recurso: subir mientras el padre siga teniendo una sola publicación.
-    let el = heading.parentElement;
+    let el = heading.closest('[role="listitem"]') || heading.parentElement;
     if (!el) return null;
-    while (el.parentElement && el.parentElement !== document.body && headingsIn(el.parentElement).length === 1) {
-      // nunca subir hasta un contenedor con poco más que esta publicación y nada al lado
-      if (el.parentElement.children.length > 1) break;
-      el = el.parentElement;
+    for (let i = 0; i < 5; i++) {
+      if (el.matches('[data-lazy-mount-id]')) break;
+      const p = el.parentElement;
+      if (!p || p === document.body || p.matches('main')) break;
+      if (headingsIn(p).length !== 1) break;
+      if (Array.from(p.children).some((c) => c !== el && hasContent(c))) break;
+      el = p;
     }
     return el;
   }
@@ -165,8 +171,12 @@
     let header = textAll(root, SEL.legacyHeader);
     if (!header) header = top.slice(0, 2).find((l) => Detect.socialContext(l)) || '';
 
-    // Si hubo contexto, el autor real viene después del separador.
-    const sep = header ? root.querySelector(SEL.separator) : null;
+    // Si hay un separador antes del texto, el autor real viene después
+    // (arriba queda el contexto: "Seguido por X", "A X le gusta esto"…).
+    const sep =
+      Array.from(root.querySelectorAll(SEL.separator)).find(
+        (hr) => !bodyEl || hr.compareDocumentPosition(bodyEl) & Node.DOCUMENT_POSITION_FOLLOWING
+      ) || null;
     const legacyLink = root.querySelector(SEL.legacyActorLink);
     const link = legacyLink || firstLinkAfter(root, sep);
 
@@ -227,7 +237,6 @@
     root.removeAttribute(ATTR);
     root.removeAttribute('data-sereno-len');
     root.removeAttribute('data-sereno-visible');
-    for (const c of root.querySelectorAll(':scope > .sereno-ctl')) c.remove();
     const prev = root.previousElementSibling;
     if (prev && prev.classList.contains('sereno-strip')) prev.remove();
   }
@@ -337,52 +346,137 @@
       makeStrip(root, result, 'label');
     }
 
-    ensureControl(root);
     trackVisible(root, Detect.postHash(author, post.body));
   }
 
-  // ---------- Menú por persona ----------
+  // ---------- Control flotante: sigue a la publicación en foco ----------
 
-  let openMenu = null;
+  const dock = { el: null, btn: null, rail: null, menu: null, post: null, raf: 0 };
 
-  function closeMenu() {
-    if (openMenu) {
-      const b = openMenu.parentElement && openMenu.parentElement.querySelector('.sereno-ctl__btn');
-      if (b) b.setAttribute('aria-expanded', 'false');
-      openMenu.remove();
-      openMenu = null;
-    }
-  }
-
-  function ensureControl(root) {
-    const id = root.getAttribute('data-sereno-author');
-    if (!id || root.querySelector(':scope > .sereno-ctl')) return;
-    const name = root.getAttribute('data-sereno-name') || id;
-    const wrap = document.createElement('div');
-    wrap.className = 'sereno-ctl';
+  function buildDock() {
+    if (dock.el || !document.body) return;
+    const el = document.createElement('div');
+    el.className = 'sereno-dock';
+    el.hidden = true;
+    const rail = document.createElement('div');
+    rail.className = 'sereno-dock__rail';
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'sereno-ctl__btn';
+    btn.className = 'sereno-dock__btn';
     btn.setAttribute('aria-haspopup', 'menu');
-    btn.setAttribute('aria-label', t('menuOpen', [name]));
-    btn.title = t('extName');
-    btn.innerHTML = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><rect x="3" y="4" width="10" height="2" rx="1" fill="currentColor"/><rect x="3" y="7.5" width="7" height="2" rx="1" fill="currentColor" opacity=".6"/><rect x="3" y="11" width="4" height="2" rx="1" fill="currentColor" opacity=".35"/></svg>';
+    btn.setAttribute('aria-expanded', 'false');
+    btn.innerHTML =
+      '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><rect x="3" y="4" width="10" height="2" rx="1" fill="currentColor"/><rect x="3" y="7.5" width="7" height="2" rx="1" fill="currentColor" opacity=".6"/><rect x="3" y="11" width="4" height="2" rx="1" fill="currentColor" opacity=".35"/></svg>';
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      if (openMenu && openMenu.parentElement === wrap) return closeMenu();
-      closeMenu();
-      openMenu = buildMenu(id, name);
-      wrap.append(openMenu);
-      btn.setAttribute('aria-expanded', 'true');
-      const first = openMenu.querySelector('button');
-      if (first) first.focus();
+      if (dock.menu) closeMenu();
+      else openMenuFor(dock.post);
     });
-    wrap.append(btn);
-    root.append(wrap);
+    el.append(rail, btn);
+    document.body.append(el);
+    Object.assign(dock, { el, btn, rail });
   }
 
-  function buildMenu(id, name) {
+  /**
+   * La publicación en foco: la que cruza la "línea de lectura" (40 % de la
+   * altura visible, donde suele estar la vista). Si ninguna la cruza, la más
+   * cercana a esa línea.
+   */
+  function focusedPost() {
+    const vh = window.innerHeight;
+    const TOP = 64; // barra superior de LinkedIn
+    const line = TOP + (vh - TOP) * 0.4;
+    const atTop = (document.scrollingElement || document.documentElement).scrollTop < 10;
+    let best = null;
+    let bestDist = Infinity;
+    for (const p of document.querySelectorAll('[data-sereno-author]')) {
+      const v = p.getAttribute(ATTR);
+      if (!v || v === 'hide' || p.classList.contains('sereno-walled')) continue;
+      const r = p.getBoundingClientRect();
+      if (r.height === 0 || r.bottom <= TOP || r.top >= vh) continue;
+      // Arriba de todo de la página, se está leyendo el primer post visible.
+      if (atTop) return p;
+      if (r.top <= line && r.bottom >= line) return p;
+      const dist = r.top > line ? r.top - line : line - r.bottom;
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = p;
+      }
+    }
+    return best;
+  }
+
+  function placeDock() {
+    dock.raf = 0;
+    if (!dock.el) return;
+    const active = settings.enabled && onFeed();
+    const post = active ? focusedPost() : null;
+    if (!post) {
+      dock.el.hidden = true;
+      dock.post = null;
+      closeMenu();
+      return;
+    }
+    if (post !== dock.post) {
+      closeMenu();
+      dock.post = post;
+      const name = post.getAttribute('data-sereno-name') || '';
+      dock.btn.setAttribute('aria-label', t('menuOpen', [name]));
+      dock.btn.title = t('menuOpen', [name]);
+    }
+    const r = post.getBoundingClientRect();
+    const vh = window.innerHeight;
+    const SIZE = 28;
+    // Al costado derecho de la tarjeta, en el margen; si no hay lugar, adentro.
+    const gutterLeft = r.right + 1;
+    const x = gutterLeft + SIZE + 2 <= window.innerWidth ? gutterLeft : r.right - SIZE - 8;
+    const top = Math.min(Math.max(r.top + 12, 76), Math.max(r.bottom - SIZE - 12, 76));
+    const railTop = Math.max(r.top, 64);
+    const railBottom = Math.min(r.bottom, vh);
+    dock.el.hidden = false;
+    dock.btn.style.transform = `translate(${Math.round(x)}px, ${Math.round(top)}px)`;
+    dock.rail.style.transform = `translate(${Math.round(x + SIZE / 2 - 1)}px, ${Math.round(railTop)}px)`;
+    dock.rail.style.height = `${Math.max(0, Math.round(railBottom - railTop))}px`;
+    if (dock.menu) positionMenu();
+  }
+
+  function scheduleDock() {
+    if (!dock.raf) dock.raf = requestAnimationFrame(placeDock);
+  }
+
+  // Durante el scroll se reubica en el momento (no espera al próximo cuadro):
+  // así el control acompaña al post sin retraso.
+  let lastPlace = 0;
+  function onScroll() {
+    const now = performance.now();
+    if (now - lastPlace < 12) return scheduleDock();
+    lastPlace = now;
+    placeDock();
+  }
+
+  function positionMenu() {
+    const b = dock.btn.getBoundingClientRect();
+    const m = dock.menu;
+    const w = m.offsetWidth || 260;
+    const left = Math.max(8, Math.min(b.right - w, window.innerWidth - w - 8));
+    const below = b.bottom + 6;
+    const top = below + m.offsetHeight > window.innerHeight - 8 ? b.top - m.offsetHeight - 6 : below;
+    m.style.transform = `translate(${Math.round(left)}px, ${Math.round(top)}px)`;
+  }
+
+  function closeMenu() {
+    if (dock.menu) {
+      dock.menu.remove();
+      dock.menu = null;
+      if (dock.btn) dock.btn.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  function openMenuFor(post) {
+    if (!post) return;
+    const id = post.getAttribute('data-sereno-author');
+    const name = post.getAttribute('data-sereno-name') || id;
     const menu = document.createElement('div');
     menu.className = 'sereno-menu';
     menu.setAttribute('role', 'menu');
@@ -404,28 +498,40 @@
       });
       menu.append(b);
     };
-    if (people.trusted[id]) {
-      item(t('menuUntrust', [name]), () => Settings.setPerson(id, name, null));
-    } else {
-      item(t('menuTrust', [name]), () => Settings.setPerson(id, name, 'trusted'));
-    }
+    if (people.trusted[id]) item(t('menuUntrust', [name]), () => Settings.setPerson(id, name, null));
+    else item(t('menuTrust', [name]), () => Settings.setPerson(id, name, 'trusted'));
     item(t('menuMute', [name]), () => {
       justMuted.add(id);
       Settings.setPerson(id, name, 'muted');
     });
     menu.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        const btn = menu.parentElement && menu.parentElement.querySelector('.sereno-ctl__btn');
         closeMenu();
-        if (btn) btn.focus();
+        dock.btn.focus();
       }
     });
-    return menu;
+    dock.el.append(menu);
+    dock.menu = menu;
+    dock.btn.setAttribute('aria-expanded', 'true');
+    positionMenu();
+    const first = menu.querySelector('.sereno-menu__item');
+    if (first) first.focus();
   }
 
-  document.addEventListener('click', (e) => {
-    if (openMenu && !openMenu.contains(e.target)) closeMenu();
-  }, true);
+  document.addEventListener(
+    'click',
+    (e) => {
+      if (dock.menu && !dock.el.contains(e.target)) closeMenu();
+    },
+    true
+  );
+  window.addEventListener('scroll', onScroll, { passive: true, capture: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  // Respaldo: LinkedIn puede desplazar contenedores internos o animar el feed
+  // sin eventos de scroll. Es barato: unas pocas mediciones cada medio segundo.
+  setInterval(() => {
+    if (document.visibilityState === 'visible' && dock.el) placeDock();
+  }, 500);
 
   // ---------- "Ya estás al día" ----------
 
@@ -564,12 +670,13 @@
     if (!root) return;
     const posts = findPosts(root);
     processMetrics(root, posts);
-    if (!settings.enabled || !onFeed()) return;
-    for (const post of posts) {
-      processPost(post);
-      const v = post.getAttribute(ATTR);
-      if (v && v !== 'hide') ensureControl(post);
+    if (!settings.enabled || !onFeed()) {
+      scheduleDock();
+      return;
     }
+    for (const post of posts) processPost(post);
+    buildDock();
+    scheduleDock();
   }
 
   function resetAll() {
@@ -579,7 +686,6 @@
     caught.oldRun = [];
     if (io) io.disconnect();
     for (const el of document.querySelectorAll(`[${ATTR}]`)) reset(el);
-    for (const el of document.querySelectorAll('.sereno-ctl')) el.remove();
     for (const el of document.querySelectorAll('.sereno-strip')) el.remove();
     for (const el of document.querySelectorAll('[data-sereno-metric]')) el.removeAttribute('data-sereno-metric');
   }

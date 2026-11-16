@@ -56,8 +56,8 @@ export const strings = {
   reasonPerson: { es: 'silenciaste a $1', en: 'you muted $1', ph: 1 },
   secPeople: { es: 'Personas y páginas', en: 'People and pages' },
   secPeopleDesc: {
-    es: 'Pasa el mouse por una publicación y usa el botón de Sereno para silenciar a alguien o para que nunca se oculte.',
-    en: 'Hover over a post and use the Sereno button to mute someone or to never hide them.'
+    es: 'El botón de Sereno acompaña, al costado del feed, a la publicación que estás leyendo: úsalo para silenciar a alguien o para que nunca se oculte.',
+    en: 'The Sereno button follows the post you are reading, beside the feed: use it to mute someone or to never hide them.'
   },
   peopleMuted: { es: 'Silenciadas', en: 'Muted' },
   peopleTrusted: { es: 'Nunca se ocultan', en: 'Never hidden' },
