@@ -69,6 +69,16 @@
   const statsDelta = { network: 0, smoke: 0, muted: 0 };
   let statsTimer = null;
 
+  let people = { muted: {}, trusted: {} };
+  const justMuted = new Set(); // personas silenciadas en esta visita (para ofrecer "Deshacer")
+
+  // "Ya estás al día"
+  let seenBefore = new Set(); // huellas de posts vistos en visitas anteriores
+  const seenQueue = new Set();
+  let seenTimer = null;
+  const caught = { visible: 0, oldRun: [], card: null, dismissed: false };
+  const OLD_RUN = 3; // posts ya vistos seguidos para decidir que estás al día
+
   // ---------- utilidades ----------
 
   function onFeed() {
@@ -160,15 +170,44 @@
     const legacyLink = root.querySelector(SEL.legacyActorLink);
     const link = legacyLink || firstLinkAfter(root, sep);
 
+    const actorHref = link ? link.getAttribute('href') : '';
     return {
       header,
       meta: textAll(root, SEL.legacyMeta) || top.filter((l) => l !== header).join(' • '),
-      actorHref: link ? link.getAttribute('href') : '',
+      actorHref,
+      authorName: authorNameFor(root, actorHref, top, header),
       body: body || all.join('\n')
     };
   }
 
+  function cleanName(text) {
+    return String(text || '')
+      .replace(/^(ver perfil de|ver empresa:?|view profile of|view company:?|ver o perfil de)\s*/i, '')
+      .replace(/\s*(verificado|verified|verificada)$/i, '')
+      .split(/\s+•\s+/)[0]
+      .trim()
+      .slice(0, 80);
+  }
+
+  /** Nombre visible del autor: texto del enlace a su perfil, o su aria-label. */
+  function authorNameFor(root, href, top, header) {
+    const legacy = root.querySelector('.update-components-actor__title');
+    if (legacy) return cleanName(textOf(legacy).split('\n')[0]);
+    const id = Detect.authorId(href);
+    if (!id) return '';
+    let fromLabel = '';
+    for (const a of root.querySelectorAll('a[href]')) {
+      if (Detect.authorId(a.getAttribute('href')) !== id) continue;
+      const txt = lines(a.innerText)[0];
+      if (txt && !(header && header.startsWith(txt))) return cleanName(txt);
+      const labeled = a.getAttribute('aria-label') ? a : a.querySelector('[aria-label]');
+      if (!fromLabel && labeled) fromLabel = cleanName(labeled.getAttribute('aria-label'));
+    }
+    return fromLabel || cleanName(top.find((l) => l !== header) || '');
+  }
+
   function reasonLabel(result) {
+    if (result.reasons[0] === 'person') return t('reasonPerson', [result.detail || '']);
     if (result.category === 'muted') return t('reasonMuted', [result.detail || '']);
     const r = result.reasons[0];
     const map = {
@@ -184,9 +223,11 @@
   // ---------- aplicar / revertir ----------
 
   function reset(root) {
-    root.classList.remove('sereno-hidden', 'sereno-dim', 'sereno-labeled');
+    root.classList.remove('sereno-hidden', 'sereno-dim', 'sereno-labeled', 'sereno-walled');
     root.removeAttribute(ATTR);
     root.removeAttribute('data-sereno-len');
+    root.removeAttribute('data-sereno-visible');
+    for (const c of root.querySelectorAll(':scope > .sereno-ctl')) c.remove();
     const prev = root.previousElementSibling;
     if (prev && prev.classList.contains('sereno-strip')) prev.remove();
   }
@@ -205,6 +246,24 @@
     label.textContent = kind === 'hidden' ? t('stripHidden', [reasonLabel(result)]) : t('stripSmoke', [reasonLabel(result)]);
 
     strip.append(mark, label);
+
+    if (kind === 'muted-person') {
+      label.textContent = t('stripMutedPerson', [result.detail || '']);
+      const undo = document.createElement('button');
+      undo.type = 'button';
+      undo.className = 'sereno-strip__btn';
+      undo.textContent = t('stripUndo');
+      undo.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const id = root.getAttribute('data-sereno-author');
+        justMuted.delete(id);
+        Settings.setPerson(id, '', null);
+      });
+      strip.append(undo);
+      root.before(strip);
+      return;
+    }
 
     if (kind !== 'label') {
       const btn = document.createElement('button');
@@ -249,26 +308,207 @@
     if (!post.body && !post.header) return;
     root.setAttribute('data-sereno-len', len);
 
-    const result = Detect.classify(post, settings);
+    const result = Detect.classify(post, settings, people);
+    const author = Detect.authorId(post.actorHref);
+    if (author) {
+      root.setAttribute('data-sereno-author', author);
+      root.setAttribute('data-sereno-name', post.authorName || author.split('/')[1]);
+    }
     root.setAttribute(ATTR, result.verdict);
-    if (result.verdict === 'show') return;
 
-    const counted = root.hasAttribute('data-sereno-counted');
-    if (!counted) {
-      root.setAttribute('data-sereno-counted', '1');
-      count(result.category);
+    if (result.verdict !== 'show') {
+      if (!root.hasAttribute('data-sereno-counted')) {
+        root.setAttribute('data-sereno-counted', '1');
+        count(result.category);
+      }
     }
 
     if (result.verdict === 'hide') {
       root.classList.add('sereno-hidden');
-      if (settings.display.showPlaceholders) makeStrip(root, result, 'hidden');
-    } else if (result.verdict === 'dim') {
+      if (result.reasons[0] === 'person' && justMuted.has(author)) makeStrip(root, result, 'muted-person');
+      else if (settings.display.showPlaceholders) makeStrip(root, result, 'hidden');
+      return;
+    }
+    if (result.verdict === 'dim') {
       root.classList.add('sereno-dim');
       makeStrip(root, result, 'dim');
     } else if (result.verdict === 'label') {
       root.classList.add('sereno-labeled');
       makeStrip(root, result, 'label');
     }
+
+    ensureControl(root);
+    trackVisible(root, Detect.postHash(author, post.body));
+  }
+
+  // ---------- Menú por persona ----------
+
+  let openMenu = null;
+
+  function closeMenu() {
+    if (openMenu) {
+      const b = openMenu.parentElement && openMenu.parentElement.querySelector('.sereno-ctl__btn');
+      if (b) b.setAttribute('aria-expanded', 'false');
+      openMenu.remove();
+      openMenu = null;
+    }
+  }
+
+  function ensureControl(root) {
+    const id = root.getAttribute('data-sereno-author');
+    if (!id || root.querySelector(':scope > .sereno-ctl')) return;
+    const name = root.getAttribute('data-sereno-name') || id;
+    const wrap = document.createElement('div');
+    wrap.className = 'sereno-ctl';
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'sereno-ctl__btn';
+    btn.setAttribute('aria-haspopup', 'menu');
+    btn.setAttribute('aria-label', t('menuOpen', [name]));
+    btn.title = t('extName');
+    btn.innerHTML = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><rect x="3" y="4" width="10" height="2" rx="1" fill="currentColor"/><rect x="3" y="7.5" width="7" height="2" rx="1" fill="currentColor" opacity=".6"/><rect x="3" y="11" width="4" height="2" rx="1" fill="currentColor" opacity=".35"/></svg>';
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (openMenu && openMenu.parentElement === wrap) return closeMenu();
+      closeMenu();
+      openMenu = buildMenu(id, name);
+      wrap.append(openMenu);
+      btn.setAttribute('aria-expanded', 'true');
+      const first = openMenu.querySelector('button');
+      if (first) first.focus();
+    });
+    wrap.append(btn);
+    root.append(wrap);
+  }
+
+  function buildMenu(id, name) {
+    const menu = document.createElement('div');
+    menu.className = 'sereno-menu';
+    menu.setAttribute('role', 'menu');
+    const head = document.createElement('div');
+    head.className = 'sereno-menu__head';
+    head.textContent = t('extName');
+    menu.append(head);
+    const item = (label, fn) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('role', 'menuitem');
+      b.className = 'sereno-menu__item';
+      b.textContent = label;
+      b.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        closeMenu();
+        fn();
+      });
+      menu.append(b);
+    };
+    if (people.trusted[id]) {
+      item(t('menuUntrust', [name]), () => Settings.setPerson(id, name, null));
+    } else {
+      item(t('menuTrust', [name]), () => Settings.setPerson(id, name, 'trusted'));
+    }
+    item(t('menuMute', [name]), () => {
+      justMuted.add(id);
+      Settings.setPerson(id, name, 'muted');
+    });
+    menu.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const btn = menu.parentElement && menu.parentElement.querySelector('.sereno-ctl__btn');
+        closeMenu();
+        if (btn) btn.focus();
+      }
+    });
+    return menu;
+  }
+
+  document.addEventListener('click', (e) => {
+    if (openMenu && !openMenu.contains(e.target)) closeMenu();
+  }, true);
+
+  // ---------- "Ya estás al día" ----------
+
+  const io =
+    typeof IntersectionObserver !== 'undefined'
+      ? new IntersectionObserver(
+          (entries) => {
+            for (const en of entries) {
+              if (!en.isIntersecting) continue;
+              const h = en.target.getAttribute('data-sereno-hash');
+              if (h && !seenBefore.has(h)) seenQueue.add(h);
+              io.unobserve(en.target);
+            }
+            if (seenQueue.size) {
+              clearTimeout(seenTimer);
+              seenTimer = setTimeout(flushSeen, 2000);
+            }
+          },
+          { threshold: 0.6 }
+        )
+      : null;
+
+  function flushSeen() {
+    const list = Array.from(seenQueue);
+    seenQueue.clear();
+    Settings.addSeen(list).catch(() => {});
+  }
+
+  function trackVisible(root, hash) {
+    if (root.hasAttribute('data-sereno-visible')) return;
+    root.setAttribute('data-sereno-visible', '1');
+    root.setAttribute('data-sereno-hash', hash);
+    if (io) io.observe(root);
+
+    if (caught.card) {
+      // Todo lo que viene después de la tarjeta queda en pausa.
+      root.classList.add('sereno-walled');
+      return;
+    }
+    const cfg = settings.caughtUp;
+    if (!cfg.enabled || caught.dismissed) return;
+
+    caught.visible += 1;
+    if (seenBefore.has(hash)) caught.oldRun.push(root);
+    else caught.oldRun = [];
+
+    if (caught.oldRun.length >= OLD_RUN) {
+      const first = caught.oldRun[0];
+      placeCard(first, 'old', caught.visible - caught.oldRun.length);
+      for (const r of caught.oldRun) r.classList.add('sereno-walled');
+    } else if (cfg.limit > 0 && caught.visible > cfg.limit) {
+      placeCard(root, 'limit', cfg.limit);
+      root.classList.add('sereno-walled');
+    }
+  }
+
+  function placeCard(before, reason, n) {
+    const card = document.createElement('section');
+    card.className = 'sereno-caught';
+    card.setAttribute('role', 'status');
+    card.innerHTML =
+      '<div class="sereno-caught__sun" aria-hidden="true"></div>' +
+      '<div class="sereno-caught__text"><strong></strong><span></span></div>' +
+      '<button type="button" class="sereno-caught__btn"></button>';
+    card.querySelector('strong').textContent = t(reason === 'old' ? 'caughtTitleOld' : 'caughtTitleLimit');
+    card.querySelector('span').textContent =
+      reason === 'old' ? t('caughtBodyOld') : t('caughtBodyLimit', [String(n)]);
+    const btn = card.querySelector('button');
+    btn.textContent = t('caughtContinue');
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      caught.dismissed = true;
+      removeCard();
+    });
+    before.before(card);
+    caught.card = card;
+  }
+
+  function removeCard() {
+    if (caught.card) caught.card.remove();
+    caught.card = null;
+    for (const el of document.querySelectorAll('.sereno-walled')) el.classList.remove('sereno-walled');
   }
 
   const COUNT_ONLY = /^[\d.,\s]+(k|m|mil|mill\.?)?\+?$/i;
@@ -325,11 +565,21 @@
     const posts = findPosts(root);
     processMetrics(root, posts);
     if (!settings.enabled || !onFeed()) return;
-    for (const post of posts) processPost(post);
+    for (const post of posts) {
+      processPost(post);
+      const v = post.getAttribute(ATTR);
+      if (v && v !== 'hide') ensureControl(post);
+    }
   }
 
   function resetAll() {
+    closeMenu();
+    removeCard();
+    caught.visible = 0;
+    caught.oldRun = [];
+    if (io) io.disconnect();
     for (const el of document.querySelectorAll(`[${ATTR}]`)) reset(el);
+    for (const el of document.querySelectorAll('.sereno-ctl')) el.remove();
     for (const el of document.querySelectorAll('.sereno-strip')) el.remove();
     for (const el of document.querySelectorAll('[data-sereno-metric]')) el.removeAttribute('data-sereno-metric');
   }
@@ -348,6 +598,8 @@
   async function start() {
     try {
       settings = await Settings.load();
+      people = await Settings.loadPeople();
+      seenBefore = new Set(Object.keys(await Settings.loadSeen()));
     } catch (_) {
       settings = Settings.DEFAULTS;
     }
@@ -363,6 +615,11 @@
       resetAll();
       run(document);
     });
+    Settings.onPeopleChange((next) => {
+      people = next;
+      resetAll();
+      run(document);
+    });
 
     // LinkedIn es una SPA: al navegar re-evaluamos.
     let lastPath = location.pathname;
@@ -372,7 +629,10 @@
         schedule();
       }
     }, 800);
-    window.addEventListener('pagehide', flushStats);
+    window.addEventListener('pagehide', () => {
+      flushStats();
+      flushSeen();
+    });
   }
 
   // Mientras carga la config, aplicamos ya la clase de métricas por defecto

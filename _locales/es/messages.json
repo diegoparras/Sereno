@@ -115,6 +115,121 @@
   "popupPausedHint": {
     "message": "Sereno está en pausa. LinkedIn se ve como siempre."
   },
+  "menuOpen": {
+    "message": "Opciones de Sereno para $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "menuMute": {
+    "message": "Silenciar a $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "menuTrust": {
+    "message": "Nunca ocultar a $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "menuUntrust": {
+    "message": "Volver a filtrar a $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "stripMutedPerson": {
+    "message": "Silenciaste a $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "stripUndo": {
+    "message": "Deshacer"
+  },
+  "reasonPerson": {
+    "message": "silenciaste a $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "secPeople": {
+    "message": "Personas y páginas"
+  },
+  "secPeopleDesc": {
+    "message": "Pasa el mouse por una publicación y usa el botón de Sereno para silenciar a alguien o para que nunca se oculte."
+  },
+  "peopleMuted": {
+    "message": "Silenciadas"
+  },
+  "peopleTrusted": {
+    "message": "Nunca se ocultan"
+  },
+  "peopleEmpty": {
+    "message": "Nadie todavía."
+  },
+  "peopleRemove": {
+    "message": "Quitar a $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "caughtTitleOld": {
+    "message": "Ya estás al día"
+  },
+  "caughtBodyOld": {
+    "message": "Ya viste lo nuevo de tu red. Lo que sigue ya lo habías visto."
+  },
+  "caughtTitleLimit": {
+    "message": "Buen momento para una pausa"
+  },
+  "caughtBodyLimit": {
+    "message": "Ya viste $VALUE$ publicaciones en esta visita.",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "caughtContinue": {
+    "message": "Seguir viendo"
+  },
+  "featCaught": {
+    "message": "Ya estás al día"
+  },
+  "featCaughtDesc": {
+    "message": "Te avisa cuando ya viste lo nuevo"
+  },
+  "secCaught": {
+    "message": "Ya estás al día"
+  },
+  "secCaughtDesc": {
+    "message": "Corta el scroll infinito: te avisa cuando empiezas a ver publicaciones que ya habías visto, o después de cierta cantidad en una misma visita."
+  },
+  "optCaughtLimit": {
+    "message": "Pausa después de"
+  },
+  "limitNone": {
+    "message": "Sin límite"
+  },
+  "caughtNote": {
+    "message": "Para saber qué ya viste, Sereno guarda en tu navegador una huella anónima de cada publicación (no su contenido) durante 21 días."
+  },
   "optTitle": {
     "message": "Ajustes"
   },
@@ -253,7 +368,7 @@
     "message": "Privacidad"
   },
   "privacyBody": {
-    "message": "Sereno funciona 100% en tu navegador. No tiene servidores, no usa analítica y no recolecta datos personales. Solo guarda tus ajustes y un contador de publicaciones ocultas."
+    "message": "Sereno funciona 100% en tu navegador. No tiene servidores, no usa analítica y no envía nada a ningún lado. En tu navegador guarda solo tus ajustes, las personas que silenciaste o protegiste, un contador de publicaciones ocultas y huellas anónimas de lo que ya viste."
   },
   "secAbout": {
     "message": "Acerca de"

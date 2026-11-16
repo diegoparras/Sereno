@@ -189,3 +189,33 @@ test('feed 2026: contadores de interacción', () => {
   assert.ok(!D.isMetricText('Comentar'));
   assert.ok(!D.isMetricText('Publicación en el feed'));
 });
+
+test('autor: identificador estable desde distintos formatos de enlace', () => {
+  assert.equal(D.authorId('https://www.linkedin.com/in/Ana-Ruiz-123/?miniProfileUrn=x'), 'in/ana-ruiz-123');
+  assert.equal(D.authorId('/company/acme-software/posts/'), 'company/acme-software');
+  assert.equal(D.authorId('https://www.linkedin.com/feed/'), '');
+  assert.equal(D.authorId(''), '');
+});
+
+test('huella: estable, distinta por autor y texto, sin el texto adentro', () => {
+  const a = D.postHash('in/ana', 'Hola mundo');
+  assert.equal(a, D.postHash('in/ana', '  HOLA   mundo '));
+  assert.notEqual(a, D.postHash('in/beto', 'Hola mundo'));
+  assert.notEqual(a, D.postHash('in/ana', 'Chau mundo'));
+  assert.ok(!a.includes('hola'));
+});
+
+test('personas: protegida gana a todo; silenciada se oculta; publicidad intacta', () => {
+  const s = defaults();
+  const people = { muted: { 'in/pesado': 'Pesado' }, trusted: { 'in/amiga': 'Amiga' } };
+  const bait = 'Comenta "SÍ" y te mando el PDF ♻️';
+  const trusted = D.classify(post({ actorHref: '/in/amiga/', header: 'A Juan le gusta esto', body: bait }), s, people);
+  assert.equal(trusted.verdict, 'show');
+  assert.equal(trusted.category, 'trusted');
+  const muted = D.classify(post({ actorHref: '/in/pesado/', body: 'Un post normal.' }), s, people);
+  assert.equal(muted.verdict, 'hide');
+  assert.deepEqual(muted.reasons, ['person']);
+  assert.equal(muted.detail, 'Pesado');
+  const ad = D.classify(post({ actorHref: '/in/pesado/', meta: 'Promocionado', body: 'x' }), s, people);
+  assert.equal(ad.verdict, 'show');
+});

@@ -115,6 +115,121 @@
   "popupPausedHint": {
     "message": "Sereno is paused. LinkedIn looks as usual."
   },
+  "menuOpen": {
+    "message": "Sereno options for $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "menuMute": {
+    "message": "Mute $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "menuTrust": {
+    "message": "Never hide $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "menuUntrust": {
+    "message": "Filter $VALUE$ again",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "stripMutedPerson": {
+    "message": "You muted $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "stripUndo": {
+    "message": "Undo"
+  },
+  "reasonPerson": {
+    "message": "you muted $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "secPeople": {
+    "message": "People and pages"
+  },
+  "secPeopleDesc": {
+    "message": "Hover over a post and use the Sereno button to mute someone or to never hide them."
+  },
+  "peopleMuted": {
+    "message": "Muted"
+  },
+  "peopleTrusted": {
+    "message": "Never hidden"
+  },
+  "peopleEmpty": {
+    "message": "Nobody yet."
+  },
+  "peopleRemove": {
+    "message": "Remove $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "caughtTitleOld": {
+    "message": "You're all caught up"
+  },
+  "caughtBodyOld": {
+    "message": "You've seen what's new from your network. What follows, you've already seen."
+  },
+  "caughtTitleLimit": {
+    "message": "Good time for a break"
+  },
+  "caughtBodyLimit": {
+    "message": "You've seen $VALUE$ posts this visit.",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "caughtContinue": {
+    "message": "Keep scrolling"
+  },
+  "featCaught": {
+    "message": "All caught up"
+  },
+  "featCaughtDesc": {
+    "message": "Tells you when you've seen what's new"
+  },
+  "secCaught": {
+    "message": "All caught up"
+  },
+  "secCaughtDesc": {
+    "message": "Breaks the infinite scroll: tells you when you start seeing posts you have already seen, or after a number of posts in one visit."
+  },
+  "optCaughtLimit": {
+    "message": "Pause after"
+  },
+  "limitNone": {
+    "message": "No limit"
+  },
+  "caughtNote": {
+    "message": "To know what you have seen, Sereno stores an anonymous fingerprint of each post (not its content) in your browser for 21 days."
+  },
   "optTitle": {
     "message": "Settings"
   },
@@ -253,7 +368,7 @@
     "message": "Privacy"
   },
   "privacyBody": {
-    "message": "Sereno runs 100% in your browser. It has no servers, no analytics and collects no personal data. It only stores your settings and a count of hidden posts."
+    "message": "Sereno runs 100% in your browser. It has no servers, no analytics and sends nothing anywhere. In your browser it only stores your settings, the people you muted or protected, a count of hidden posts and anonymous fingerprints of what you have seen."
   },
   "secAbout": {
     "message": "About"

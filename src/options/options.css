@@ -272,3 +272,24 @@ label.row {
     gap: 2px;
   }
 }
+
+.note {
+  margin: 12px 0 0;
+  font-size: 12.5px;
+}
+.people {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 14px;
+}
+.people h3 {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+@media (max-width: 560px) {
+  .people {
+    grid-template-columns: 1fr;
+  }
+}

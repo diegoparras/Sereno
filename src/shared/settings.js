@@ -32,6 +32,10 @@
     },
     display: {
       showPlaceholders: false // dejar una línea "Sereno ocultó un post · Mostrar"
+    },
+    caughtUp: {
+      enabled: true, // tarjeta "Ya estás al día"
+      limit: 25 // pausa después de N publicaciones por visita (0 = sin límite)
     }
   });
 
@@ -126,6 +130,74 @@
     return s;
   }
 
+  // ---- Personas silenciadas / protegidas (storage.local: sync tiene límite de 8 KB) ----
+
+  const PEOPLE_KEY = 'serenoPeople';
+  const PEOPLE_MAX = 1000;
+
+  function hasLocal() {
+    return typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local;
+  }
+
+  function cleanPeople(p) {
+    const pick = (o) => {
+      const out = {};
+      if (!isObject(o)) return out;
+      for (const [k, v] of Object.entries(o).slice(-PEOPLE_MAX)) if (typeof v === 'string') out[k] = v;
+      return out;
+    };
+    return { muted: pick(p && p.muted), trusted: pick(p && p.trusted) };
+  }
+
+  async function loadPeople() {
+    if (!hasLocal()) return cleanPeople({});
+    const data = await chrome.storage.local.get(PEOPLE_KEY);
+    return cleanPeople(data[PEOPLE_KEY]);
+  }
+
+  /** list: 'muted' | 'trusted' | null (null = quitar de ambas). */
+  async function setPerson(id, name, list) {
+    if (!id) return loadPeople();
+    const p = await loadPeople();
+    delete p.muted[id];
+    delete p.trusted[id];
+    if (list === 'muted' || list === 'trusted') p[list][id] = String(name || id).slice(0, 80);
+    await chrome.storage.local.set({ [PEOPLE_KEY]: p });
+    return p;
+  }
+
+  function onPeopleChange(callback) {
+    if (!hasLocal()) return;
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area === 'local' && changes[PEOPLE_KEY]) callback(cleanPeople(changes[PEOPLE_KEY].newValue));
+    });
+  }
+
+  // ---- Publicaciones ya vistas (para "Ya estás al día") ----
+
+  const SEEN_KEY = 'serenoSeen';
+  const SEEN_MAX = 3000;
+  const SEEN_DAYS = 21;
+
+  async function loadSeen() {
+    if (!hasLocal()) return {};
+    const data = await chrome.storage.local.get(SEEN_KEY);
+    return isObject(data[SEEN_KEY]) ? data[SEEN_KEY] : {};
+  }
+
+  async function addSeen(hashes) {
+    if (!hasLocal() || !hashes.length) return;
+    const seen = await loadSeen();
+    const now = Date.now();
+    for (const h of hashes) seen[h] = now;
+    const cutoff = now - SEEN_DAYS * 864e5;
+    const kept = Object.entries(seen)
+      .filter(([, ts]) => typeof ts === 'number' && ts > cutoff)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, SEEN_MAX);
+    await chrome.storage.local.set({ [SEEN_KEY]: Object.fromEntries(kept) });
+  }
+
   root.SerenoSettings = {
     DEFAULTS,
     SETTINGS_KEY,
@@ -136,7 +208,13 @@
     update,
     onChange,
     loadStats,
-    addStats
+    addStats,
+    PEOPLE_KEY,
+    loadPeople,
+    setPerson,
+    onPeopleChange,
+    loadSeen,
+    addSeen
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = root.SerenoSettings;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

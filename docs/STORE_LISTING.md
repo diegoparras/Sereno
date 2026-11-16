@@ -25,6 +25,12 @@ Atenúa los cebos de interacción ("Comenta SÍ y te mando el PDF"), las histori
 **Sin números**
 Esconde likes, comentarios y contadores de seguidores. Lees el contenido, no el marcador.
 
+**Ya estás al día**
+Cuando empiezas a ver publicaciones que ya habías visto, Sereno te avisa y pone en pausa el resto. Se acabó el scroll infinito.
+
+**Tú decides sobre cada persona**
+Silencia a alguien con un clic, o márcalo para que nunca se oculte.
+
 **Palabras silenciadas**
 Oculta lo que mencione los temas que no quieres ver.
 
@@ -46,6 +52,10 @@ Feeds are built to keep you scrolling, not to be useful. Sereno tidies yours so 
 
 **No numbers**: hides likes, comment counts and follower counts. Read the content, not the scoreboard.
 
+**All caught up**: when you start seeing posts you've already seen, Sereno tells you and pauses the rest. No more infinite scroll.
+
+**You decide, person by person**: mute someone in one click, or mark them to never be hidden.
+
 **Muted words**: hide posts that mention topics you don't want to see.
 
 **Private by design**: runs 100% in your browser, with no servers, analytics or accounts. It stores only your settings and a counter, never acts on your behalf and never touches ads.
@@ -58,7 +68,7 @@ Sereno is an independent project. It is not affiliated with, endorsed or sponsor
 Make the LinkedIn feed calmer and more relevant by hiding or dimming posts the user chose not to see (activity from strangers, suggested posts, engagement bait, muted words) and hiding vanity metrics.
 
 **Justificación de permisos:**
-- `storage`: store the user's settings and a local counter of hidden posts.
+- `storage`: store the user's settings, the people they chose to mute or protect, a local counter of hidden posts and short irreversible fingerprints of posts already seen (for the "all caught up" notice). Nothing leaves the browser.
 - Host access `https://www.linkedin.com/*` (via content script): read the posts already displayed on the page to decide which ones to hide or dim. No other sites are accessed.
 
 **¿Usa código remoto?** No.

@@ -96,6 +96,29 @@
         </div>
       </section>
 
+      <!-- Ya estás al día -->
+      <section class="card">
+        <div class="card__head">
+          <div>
+            <h2 data-i18n="secCaught"></h2>
+            <p data-i18n="secCaughtDesc"></p>
+          </div>
+          <label class="switch"><input type="checkbox" data-setting="caughtUp.enabled" data-i18n-aria-label="secCaught" /><span class="switch__track"></span></label>
+        </div>
+        <div class="rows" data-depends="caughtUp.enabled">
+          <div class="row">
+            <span class="row__title" id="lblLimit" data-i18n="optCaughtLimit"></span>
+            <div class="segmented" role="radiogroup" aria-labelledby="lblLimit">
+              <label><input type="radio" name="caughtUp.limit" value="15" data-type="number" /><span>15</span></label>
+              <label><input type="radio" name="caughtUp.limit" value="25" data-type="number" /><span>25</span></label>
+              <label><input type="radio" name="caughtUp.limit" value="50" data-type="number" /><span>50</span></label>
+              <label><input type="radio" name="caughtUp.limit" value="0" data-type="number" /><span data-i18n="limitNone"></span></label>
+            </div>
+          </div>
+          <p class="note muted" data-i18n="caughtNote"></p>
+        </div>
+      </section>
+
       <!-- Sin números -->
       <section class="card">
         <div class="card__head">
@@ -121,6 +144,28 @@
         </form>
         <ul class="tags" id="mutedList"></ul>
         <p class="empty muted" id="mutedEmpty" data-i18n="mutedEmpty"></p>
+      </section>
+
+      <!-- Personas -->
+      <section class="card">
+        <div class="card__head">
+          <div>
+            <h2 data-i18n="secPeople"></h2>
+            <p data-i18n="secPeopleDesc"></p>
+          </div>
+        </div>
+        <div class="people">
+          <div>
+            <h3 data-i18n="peopleTrusted"></h3>
+            <ul class="tags" id="trustedList"></ul>
+            <p class="empty muted" id="trustedEmpty" data-i18n="peopleEmpty"></p>
+          </div>
+          <div>
+            <h3 data-i18n="peopleMuted"></h3>
+            <ul class="tags" id="peopleMutedList"></ul>
+            <p class="empty muted" id="peopleMutedEmpty" data-i18n="peopleEmpty"></p>
+          </div>
+        </div>
       </section>
 
       <!-- Transparencia -->

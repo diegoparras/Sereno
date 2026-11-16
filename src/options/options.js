@@ -9,6 +9,7 @@
   const get = (obj, path) => path.split('.').reduce((o, k) => (o ? o[k] : undefined), obj);
 
   let settings = await S.load();
+  let people = await S.loadPeople();
 
   if (new URLSearchParams(location.search).has('welcome')) $('welcome').hidden = false;
   $('version').textContent = t('version', [chrome.runtime.getManifest().version]);
@@ -25,12 +26,45 @@
       input.checked = Boolean(get(settings, input.dataset.setting));
     }
     for (const input of document.querySelectorAll('input[type="radio"]')) {
-      input.checked = get(settings, input.name) === input.value;
+      input.checked = String(get(settings, input.name)) === input.value;
     }
     for (const el of document.querySelectorAll('[data-depends]')) {
       el.classList.toggle('is-disabled', !get(settings, el.dataset.depends));
     }
     renderMuted();
+    renderPeople();
+  }
+
+  function chip(label, onRemove, removeLabel) {
+    const li = document.createElement('li');
+    li.append(label);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.setAttribute('aria-label', removeLabel);
+    btn.innerHTML =
+      '<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+    btn.addEventListener('click', onRemove);
+    li.append(btn);
+    return li;
+  }
+
+  function renderPeople() {
+    for (const [list, ul, empty] of [
+      ['trusted', 'trustedList', 'trustedEmpty'],
+      ['muted', 'peopleMutedList', 'peopleMutedEmpty']
+    ]) {
+      const entries = Object.entries(people[list]);
+      $(ul).replaceChildren(
+        ...entries.map(([id, name]) =>
+          chip(name, async () => {
+            people = await S.setPerson(id, '', null);
+            renderPeople();
+            toast();
+          }, t('peopleRemove', [name]))
+        )
+      );
+      $(empty).hidden = entries.length > 0;
+    }
   }
 
   function renderMuted() {
@@ -65,7 +99,10 @@
     input.addEventListener('change', () => set(input.dataset.setting, input.checked));
   }
   for (const input of document.querySelectorAll('input[type="radio"]')) {
-    input.addEventListener('change', () => input.checked && set(input.name, input.value));
+    input.addEventListener(
+      'change',
+      () => input.checked && set(input.name, input.dataset.type === 'number' ? Number(input.value) : input.value)
+    );
   }
 
   $('mutedForm').addEventListener('submit', (e) => {
@@ -89,6 +126,10 @@
   S.onChange((next) => {
     settings = next;
     render();
+  });
+  S.onPeopleChange((next) => {
+    people = next;
+    renderPeople();
   });
 
   render();

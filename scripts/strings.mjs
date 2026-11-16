@@ -46,6 +46,47 @@ export const strings = {
     en: 'Sereno is paused. LinkedIn looks as usual.'
   },
 
+  // ---- Personas ----
+  menuOpen: { es: 'Opciones de Sereno para $1', en: 'Sereno options for $1', ph: 1 },
+  menuMute: { es: 'Silenciar a $1', en: 'Mute $1', ph: 1 },
+  menuTrust: { es: 'Nunca ocultar a $1', en: 'Never hide $1', ph: 1 },
+  menuUntrust: { es: 'Volver a filtrar a $1', en: 'Filter $1 again', ph: 1 },
+  stripMutedPerson: { es: 'Silenciaste a $1', en: 'You muted $1', ph: 1 },
+  stripUndo: { es: 'Deshacer', en: 'Undo' },
+  reasonPerson: { es: 'silenciaste a $1', en: 'you muted $1', ph: 1 },
+  secPeople: { es: 'Personas y páginas', en: 'People and pages' },
+  secPeopleDesc: {
+    es: 'Pasa el mouse por una publicación y usa el botón de Sereno para silenciar a alguien o para que nunca se oculte.',
+    en: 'Hover over a post and use the Sereno button to mute someone or to never hide them.'
+  },
+  peopleMuted: { es: 'Silenciadas', en: 'Muted' },
+  peopleTrusted: { es: 'Nunca se ocultan', en: 'Never hidden' },
+  peopleEmpty: { es: 'Nadie todavía.', en: 'Nobody yet.' },
+  peopleRemove: { es: 'Quitar a $1', en: 'Remove $1', ph: 1 },
+
+  // ---- Ya estás al día ----
+  caughtTitleOld: { es: 'Ya estás al día', en: "You're all caught up" },
+  caughtBodyOld: {
+    es: 'Ya viste lo nuevo de tu red. Lo que sigue ya lo habías visto.',
+    en: "You've seen what's new from your network. What follows, you've already seen."
+  },
+  caughtTitleLimit: { es: 'Buen momento para una pausa', en: 'Good time for a break' },
+  caughtBodyLimit: { es: 'Ya viste $1 publicaciones en esta visita.', en: "You've seen $1 posts this visit.", ph: 1 },
+  caughtContinue: { es: 'Seguir viendo', en: 'Keep scrolling' },
+  featCaught: { es: 'Ya estás al día', en: 'All caught up' },
+  featCaughtDesc: { es: 'Te avisa cuando ya viste lo nuevo', en: "Tells you when you've seen what's new" },
+  secCaught: { es: 'Ya estás al día', en: 'All caught up' },
+  secCaughtDesc: {
+    es: 'Corta el scroll infinito: te avisa cuando empiezas a ver publicaciones que ya habías visto, o después de cierta cantidad en una misma visita.',
+    en: 'Breaks the infinite scroll: tells you when you start seeing posts you have already seen, or after a number of posts in one visit.'
+  },
+  optCaughtLimit: { es: 'Pausa después de', en: 'Pause after' },
+  limitNone: { es: 'Sin límite', en: 'No limit' },
+  caughtNote: {
+    es: 'Para saber qué ya viste, Sereno guarda en tu navegador una huella anónima de cada publicación (no su contenido) durante 21 días.',
+    en: 'To know what you have seen, Sereno stores an anonymous fingerprint of each post (not its content) in your browser for 21 days.'
+  },
+
   // ---- Opciones ----
   optTitle: { es: 'Ajustes', en: 'Settings' },
   optTagline: { es: 'Tu feed, sin ruido.', en: 'Your feed, without the noise.' },
@@ -131,8 +172,8 @@ export const strings = {
 
   secPrivacy: { es: 'Privacidad', en: 'Privacy' },
   privacyBody: {
-    es: 'Sereno funciona 100% en tu navegador. No tiene servidores, no usa analítica y no recolecta datos personales. Solo guarda tus ajustes y un contador de publicaciones ocultas.',
-    en: 'Sereno runs 100% in your browser. It has no servers, no analytics and collects no personal data. It only stores your settings and a count of hidden posts.'
+    es: 'Sereno funciona 100% en tu navegador. No tiene servidores, no usa analítica y no envía nada a ningún lado. En tu navegador guarda solo tus ajustes, las personas que silenciaste o protegiste, un contador de publicaciones ocultas y huellas anónimas de lo que ya viste.',
+    en: 'Sereno runs 100% in your browser. It has no servers, no analytics and sends nothing anywhere. In your browser it only stores your settings, the people you muted or protected, a count of hidden posts and anonymous fingerprints of what you have seen.'
   },
   secAbout: { es: 'Acerca de', en: 'About' },
   aboutBody: {

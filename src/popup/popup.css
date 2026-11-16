@@ -140,6 +140,10 @@ body {
   background: color-mix(in srgb, var(--warm) 18%, transparent);
   color: var(--warm);
 }
+.feature__icon--caught {
+  background: color-mix(in srgb, #f3c06b 22%, transparent);
+  color: #c98a1e;
+}
 .feature__icon--metrics {
   background: var(--surface-2);
   color: var(--ink-2);

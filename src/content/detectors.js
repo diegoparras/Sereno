@@ -212,17 +212,50 @@
     return null;
   }
 
+  /** "/in/Ana-Ruiz-123/?x=1" → "in/ana-ruiz-123". Identificador estable de autor. */
+  function authorId(href) {
+    if (!href) return '';
+    try {
+      const u = new URL(href, 'https://www.linkedin.com');
+      const m = u.pathname.match(/^\/(in|company|showcase|school)\/([^/]+)/);
+      return m ? `${m[1]}/${decodeURIComponent(m[2]).toLowerCase()}` : '';
+    } catch (_) {
+      return '';
+    }
+  }
+
+  /** Huella corta de una publicación (autor + comienzo del texto), FNV-1a. */
+  function postHash(author, body) {
+    const str = `${author}|${normalize(body).slice(0, 240)}`;
+    let h = 0x811c9dc5;
+    for (let i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 0x01000193);
+    }
+    return (h >>> 0).toString(36);
+  }
+
   /**
    * Clasifica una publicación.
-   * post: { header, meta, actorHref, body }
+   * post: { header, meta, actorHref, body, authorName? }
+   * people: { muted: {id: nombre}, trusted: {id: nombre} } (opcional)
    * Devuelve { verdict: 'show'|'hide'|'dim'|'label', category, reasons[], detail }
    */
-  function classify(post, settings) {
+  function classify(post, settings, people) {
     const show = { verdict: 'show', category: null, reasons: [] };
     if (!settings || !settings.enabled) return show;
 
     // Regla fija: no tocamos publicidad.
     if (isPromoted(post.meta) || isPromoted(post.header)) return { ...show, category: 'promoted' };
+
+    // Decisiones explícitas del usuario sobre una persona o página: mandan sobre todo lo demás.
+    const id = authorId(post.actorHref);
+    if (people && id) {
+      if (people.trusted && people.trusted[id]) return { ...show, category: 'trusted' };
+      if (people.muted && people.muted[id]) {
+        return { verdict: 'hide', category: 'muted', reasons: ['person'], detail: people.muted[id] };
+      }
+    }
 
     const net = settings.network;
     if (net && net.enabled) {
@@ -288,6 +321,8 @@
     smokeScore,
     mutedHit,
     classify,
+    authorId,
+    postHash,
     isMetricText,
     SENSITIVITY_THRESHOLD
   };

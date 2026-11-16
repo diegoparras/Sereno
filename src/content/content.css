@@ -102,3 +102,165 @@ html.sereno-no-metrics [data-sereno-metric] {
 html.sereno-no-metrics .social-details-social-counts {
   display: none !important;
 }
+
+/* ---------- Menú por persona ---------- */
+[data-sereno]:not(.sereno-hidden) {
+  position: relative;
+}
+.sereno-ctl {
+  position: absolute;
+  top: 10px;
+  right: 92px;
+  z-index: 6;
+}
+.sereno-ctl__btn {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--sereno-border);
+  border-radius: 50%;
+  background: var(--sereno-bg);
+  color: var(--sereno-accent);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  transform: scale(0.9);
+}
+[data-sereno]:hover > .sereno-ctl .sereno-ctl__btn,
+.sereno-ctl:focus-within .sereno-ctl__btn,
+.sereno-ctl__btn[aria-expanded='true'] {
+  opacity: 1;
+  transform: none;
+}
+.sereno-ctl__btn:focus-visible {
+  outline: 2px solid var(--sereno-accent);
+  outline-offset: 2px;
+}
+@media (hover: none) {
+  .sereno-ctl__btn {
+    opacity: 0.8;
+    transform: none;
+  }
+}
+.sereno-menu {
+  position: absolute;
+  top: 34px;
+  right: 0;
+  min-width: 230px;
+  max-width: 300px;
+  padding: 6px;
+  border: 1px solid var(--sereno-border);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 8px 28px rgba(16, 40, 34, 0.18);
+  font: 500 13.5px/1.35 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+html.theme--dark .sereno-menu,
+html[data-theme='dark'] .sereno-menu {
+  background: #16241f;
+}
+.sereno-menu__head {
+  padding: 6px 10px 4px;
+  color: var(--sereno-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.sereno-menu__item {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--sereno-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.sereno-menu__item:hover,
+.sereno-menu__item:focus-visible {
+  background: var(--sereno-bg);
+  outline: none;
+}
+
+/* ---------- Ya estás al día ---------- */
+.sereno-caught {
+  position: sticky;
+  top: 72px;
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 8px;
+  padding: 16px 18px;
+  border: 1px solid var(--sereno-border);
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--sereno-bg), #ffffff 80%);
+  box-shadow: 0 8px 28px rgba(16, 40, 34, 0.12);
+  color: var(--sereno-ink);
+  font: 14px/1.4 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+html.theme--dark .sereno-caught,
+html[data-theme='dark'] .sereno-caught {
+  background: linear-gradient(135deg, var(--sereno-bg), #16241f 80%);
+}
+.sereno-caught__sun {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, #f3c06b 0 40%, rgba(243, 192, 107, 0.25) 41% 100%);
+}
+.sereno-caught__text {
+  flex: 1;
+  display: grid;
+  gap: 2px;
+}
+.sereno-caught__text strong {
+  font-size: 15px;
+}
+.sereno-caught__text span {
+  color: var(--sereno-muted);
+  font-size: 13px;
+}
+.sereno-caught__btn {
+  flex: none;
+  padding: 7px 14px;
+  border: 1px solid var(--sereno-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--sereno-accent);
+  font: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+.sereno-caught__btn:hover {
+  background: var(--sereno-accent);
+  border-color: var(--sereno-accent);
+  color: var(--sereno-accent-ink);
+}
+.sereno-caught__btn:focus-visible {
+  outline: 2px solid var(--sereno-accent);
+  outline-offset: 2px;
+}
+
+/* Lo que sigue queda en pausa: se ve borroso pero conserva su lugar
+   (si se ocultara, LinkedIn cargaría más publicaciones sin parar). */
+.sereno-walled {
+  filter: blur(6px) grayscale(1);
+  opacity: 0.3;
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sereno-ctl__btn,
+  .sereno-dim {
+    transition: none;
+  }
+}

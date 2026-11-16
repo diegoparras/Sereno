@@ -10,7 +10,9 @@ Sereno lee las publicaciones que LinkedIn ya te muestra en tu navegador para dec
 ## Qué datos guarda
 Usa el almacenamiento de Chrome (`chrome.storage`) para guardar únicamente:
 - **Tus ajustes**: qué funciones están activas y tu lista de palabras silenciadas. Si tienes activada la sincronización de Chrome, Google sincroniza estos ajustes entre tus dispositivos.
+- **Personas y páginas que silenciaste o protegiste**: el identificador de su perfil (por ejemplo, `in/ana-ruiz`) y su nombre visible, solo porque tú los agregaste. Se guardan en este navegador, no se sincronizan.
 - **Contadores anónimos**: cuántas publicaciones se ocultaron hoy y en total. Son solo números, sin contenido, autores ni enlaces.
+- **Huellas de publicaciones vistas** (para «Ya estás al día»): un código corto calculado a partir de cada publicación que viste en pantalla. No contiene el texto ni el autor y no se puede revertir. Se borran solas a los 21 días.
 
 ## Qué no hace
 - No envía información a servidores propios ni de terceros. Sereno no tiene servidores.
@@ -39,7 +41,7 @@ _Last updated: November 16, 2026_
 
 Sereno reads the posts LinkedIn already shows you in your browser to decide, based on your settings, which to hide or dim. This happens **only inside your browser**.
 
-It stores, via `chrome.storage`, only your **settings** (enabled features and muted words; synced by Chrome if you have sync on) and **anonymous counters** of hidden posts (numbers only, no content, authors or links).
+It stores, via `chrome.storage`, only: your **settings** (enabled features and muted words; synced by Chrome if you have sync on); the **people and pages you chose to mute or protect** (profile identifier and display name, kept locally, not synced); **anonymous counters** of hidden posts; and short, irreversible **fingerprints of posts you have seen** (no text or author), deleted automatically after 21 days, used for “All caught up”.
 
 It does not send data to any server (it has none), use analytics or tracking, store post content or profiles, act on your behalf, or modify LinkedIn ads.
 
