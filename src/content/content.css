@@ -188,6 +188,47 @@ html[data-theme='dark'] .sereno-menu {
   text-align: left;
   cursor: pointer;
 }
+.sereno-menu__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.sereno-menu__key {
+  flex: none;
+  min-width: 20px;
+  padding: 1px 6px;
+  border: 1px solid var(--sereno-border);
+  border-radius: 5px;
+  background: var(--sereno-bg);
+  color: var(--sereno-muted);
+  font: 600 11px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-align: center;
+}
+.sereno-toast {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 280px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--sereno-ink);
+  color: #fff;
+  font: 600 12.5px/1.35 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+html.theme--dark .sereno-toast,
+html[data-theme='dark'] .sereno-toast {
+  color: #0f1f1b;
+}
+.sereno-toast.is-on {
+  opacity: 1;
+}
 .sereno-menu__item:hover,
 .sereno-menu__item:focus-visible {
   background: var(--sereno-bg);

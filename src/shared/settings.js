@@ -36,6 +36,9 @@
     caughtUp: {
       enabled: true, // tarjeta "Ya estás al día"
       limit: 25 // pausa después de N publicaciones por visita (0 = sin límite)
+    },
+    shortcuts: {
+      enabled: true // J/K: siguiente/anterior · M: silenciar · P: proteger
     }
   });
 

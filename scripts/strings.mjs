@@ -64,6 +64,18 @@ export const strings = {
   peopleEmpty: { es: 'Nadie todavía.', en: 'Nobody yet.' },
   peopleRemove: { es: 'Quitar a $1', en: 'Remove $1', ph: 1 },
 
+  toastTrusted: { es: 'Sereno nunca ocultará a $1', en: 'Sereno will never hide $1', ph: 1 },
+  toastUntrusted: { es: '$1 vuelve a filtrarse', en: '$1 is filtered again', ph: 1 },
+  secShortcuts: { es: 'Atajos de teclado', en: 'Keyboard shortcuts' },
+  secShortcutsDesc: {
+    es: 'Funcionan en el feed mientras no estés escribiendo.',
+    en: 'They work on the feed while you are not typing.'
+  },
+  keyNext: { es: 'Siguiente publicación', en: 'Next post' },
+  keyPrev: { es: 'Publicación anterior', en: 'Previous post' },
+  keyMute: { es: 'Silenciar al autor de la publicación en foco', en: 'Mute the author of the focused post' },
+  keyTrust: { es: 'Proteger (o dejar de proteger) al autor', en: 'Protect (or unprotect) the author' },
+
   // ---- Ya estás al día ----
   caughtTitleOld: { es: 'Ya estás al día', en: "You're all caught up" },
   caughtBodyOld: {

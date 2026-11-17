@@ -366,7 +366,7 @@
 
   // ---------- Control flotante: sigue a la publicación en foco ----------
 
-  const dock = { el: null, btn: null, rail: null, menu: null, post: null, raf: 0 };
+  const dock = { el: null, btn: null, rail: null, menu: null, post: null, raf: 0, pinned: null };
 
   /**
    * Crea el control (o lo vuelve a enganchar). Va colgado de <html>, fuera del
@@ -414,6 +414,12 @@
    * cercana a esa línea.
    */
   function focusedPost() {
+    // Elegido con J/K: manda hasta que el usuario scrollee por su cuenta.
+    if (dock.pinned) {
+      const r = dock.pinned.isConnected && boxOf(dock.pinned).getBoundingClientRect();
+      if (r && r.bottom > 64 && r.top < window.innerHeight && dock.pinned.getAttribute(ATTR) !== 'hide') return dock.pinned;
+      dock.pinned = null;
+    }
     const vh = window.innerHeight;
     const TOP = 64; // barra superior de LinkedIn
     const line = TOP + (vh - TOP) * 0.4;
@@ -445,6 +451,7 @@
     dock.raf = 0;
     if (!dock.el) return;
     if (!dock.el.isConnected) document.documentElement.append(dock.el);
+    if (dock.pinned && !dock.pinned.isConnected) dock.pinned = null;
     const active = settings.enabled && onFeed();
     const post = active ? focusedPost() : null;
     if (!post) {
@@ -474,6 +481,24 @@
     dock.rail.style.transform = `translate(${Math.round(x + SIZE / 2 - 1)}px, ${Math.round(railTop)}px)`;
     dock.rail.style.height = `${Math.max(0, Math.round(railBottom - railTop))}px`;
     if (dock.menu) positionMenu();
+  }
+
+  let toastTimer = null;
+  function dockToast(text) {
+    if (!dock.el) return;
+    let el = dock.el.querySelector('.sereno-toast');
+    if (!el) {
+      el = document.createElement('div');
+      el.className = 'sereno-toast';
+      el.setAttribute('role', 'status');
+      dock.el.append(el);
+    }
+    el.textContent = text;
+    const b = dock.btn.getBoundingClientRect();
+    el.style.transform = `translate(${Math.round(b.left - 8)}px, ${Math.round(b.top + b.height / 2)}px) translate(-100%, -50%)`;
+    el.classList.add('is-on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('is-on'), 1800);
   }
 
   function scheduleDock() {
@@ -519,12 +544,23 @@
     head.className = 'sereno-menu__head';
     head.textContent = t('extName');
     menu.append(head);
-    const item = (label, fn) => {
+    const item = (label, fn, key) => {
       const b = document.createElement('button');
       b.type = 'button';
       b.setAttribute('role', 'menuitem');
       b.className = 'sereno-menu__item';
-      b.textContent = label;
+      const span = document.createElement('span');
+      span.className = 'sereno-menu__label';
+      span.textContent = label;
+      b.append(span);
+      if (key) {
+        const k = document.createElement('kbd');
+        k.className = 'sereno-menu__key';
+        k.textContent = key;
+        k.setAttribute('aria-hidden', 'true');
+        b.setAttribute('aria-keyshortcuts', key);
+        b.append(k);
+      }
       b.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -533,12 +569,9 @@
       });
       menu.append(b);
     };
-    if (people.trusted[id]) item(t('menuUntrust', [name]), () => Settings.setPerson(id, name, null));
-    else item(t('menuTrust', [name]), () => Settings.setPerson(id, name, 'trusted'));
-    item(t('menuMute', [name]), () => {
-      justMuted.add(id);
-      Settings.setPerson(id, name, 'muted');
-    });
+    const keys = settings.shortcuts.enabled;
+    item(t(people.trusted[id] ? 'menuUntrust' : 'menuTrust', [name]), () => toggleTrust(post), keys ? 'P' : '');
+    item(t('menuMute', [name]), () => mutePost(post), keys ? 'M' : '');
     menu.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         closeMenu();
@@ -557,6 +590,101 @@
     'click',
     (e) => {
       if (dock.menu && dock.el && !dock.el.contains(e.target)) closeMenu();
+    },
+    true
+  );
+
+  function postInfo(post) {
+    if (!post) return null;
+    const id = post.getAttribute('data-sereno-author');
+    return id ? { id, name: post.getAttribute('data-sereno-name') || id } : null;
+  }
+
+  function mutePost(post) {
+    const p = postInfo(post);
+    if (!p) return;
+    justMuted.add(p.id);
+    Settings.setPerson(p.id, p.name, 'muted');
+  }
+
+  function toggleTrust(post) {
+    const p = postInfo(post);
+    if (!p) return;
+    const trusted = !!people.trusted[p.id];
+    Settings.setPerson(p.id, p.name, trusted ? null : 'trusted');
+    dockToast(t(trusted ? 'toastUntrusted' : 'toastTrusted', [p.name]));
+  }
+
+  // ---------- Atajos de teclado ----------
+
+  function visiblePosts() {
+    return Array.from(document.querySelectorAll('[data-sereno-author]')).filter((p) => {
+      const v = p.getAttribute(ATTR);
+      return v && v !== 'hide' && !boxOf(p).classList.contains('sereno-walled');
+    });
+  }
+
+  function goTo(step) {
+    const list = visiblePosts();
+    if (!list.length) return;
+    const current = focusedPost();
+    let i = current ? list.indexOf(current) + step : 0;
+    i = Math.max(0, Math.min(list.length - 1, i));
+    dock.pinned = list[i];
+    scheduleDock();
+    const box = boxOf(list[i]);
+    // Dejamos el comienzo del post apenas arriba de la línea de lectura, así
+    // el foco (y el botón de Sereno) queda en el post al que fuiste.
+    const TOP = 64;
+    const line = TOP + (window.innerHeight - TOP) * 0.4;
+    box.style.scrollMarginTop = `${Math.round(Math.max(TOP + 12, line - 48))}px`;
+    box.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }
+
+  // Si el usuario scrollea por su cuenta, el foco vuelve a seguir la línea de lectura.
+  const unpin = () => {
+    if (dock.pinned) {
+      dock.pinned = null;
+      scheduleDock();
+    }
+  };
+  window.addEventListener('wheel', unpin, { passive: true, capture: true });
+  window.addEventListener('touchstart', unpin, { passive: true, capture: true });
+  window.addEventListener(
+    'pointerdown',
+    (e) => {
+      if (!(dock.el && dock.el.contains(e.target))) unpin();
+    },
+    { passive: true, capture: true }
+  );
+  window.addEventListener(
+    'keydown',
+    (e) => {
+      if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', ' ', 'Home', 'End'].includes(e.key)) unpin();
+    },
+    { capture: true }
+  );
+
+  function isTyping(e) {
+    const el = e.target;
+    if (!el || !el.closest) return false;
+    return !!el.closest('input, textarea, select, [contenteditable=""], [contenteditable="true"], [role="textbox"]');
+  }
+
+  document.addEventListener(
+    'keydown',
+    (e) => {
+      if (!settings.enabled || !settings.shortcuts.enabled || !onFeed()) return;
+      if (e.ctrlKey || e.metaKey || e.altKey || e.isComposing || isTyping(e)) return;
+      const key = e.key.toLowerCase();
+      if (!['j', 'k', 'm', 'p'].includes(key)) return;
+      e.preventDefault();
+      e.stopPropagation();
+      closeMenu();
+      if (key === 'j') goTo(1);
+      else if (key === 'k') goTo(-1);
+      else if (key === 'm') mutePost(focusedPost());
+      else if (key === 'p') toggleTrust(focusedPost());
     },
     true
   );
@@ -683,9 +811,35 @@
     }
   }
 
+  /**
+   * Números con su etiqueta aparte, fuera de los posts: "Visualizaciones del
+   * perfil ··· 766", "Impresiones de la publicación ··· 2.362" (columna izquierda).
+   * Se busca la etiqueta y se oculta el número que la acompaña en la misma fila.
+   */
+  function hideLabeledCounts(scope) {
+    for (const el of scope.querySelectorAll('span, p, dt, div, strong, h3')) {
+      if (el.childElementCount > 0) continue;
+      const text = (el.textContent || '').trim();
+      if (!text || text.length > 40 || !Detect.isMetricLabel(text)) continue;
+      // Subir hasta 3 niveles buscando la fila que contiene el número.
+      let row = el.parentElement;
+      for (let i = 0; row && i < 3; i++, row = row.parentElement) {
+        if ((row.textContent || '').length > 120) break;
+        const nums = Array.from(row.querySelectorAll('span, p, dd, div, strong')).filter(
+          (n) => n.childElementCount === 0 && n !== el && COUNT_ONLY.test((n.textContent || '').trim())
+        );
+        if (nums.length) {
+          for (const n of nums) mark(n);
+          break;
+        }
+      }
+    }
+  }
+
   function processMetrics(scope, posts) {
     if (!settings.enabled || !settings.metrics.enabled) return;
     for (const p of posts) hideMetricsIn(p);
+    hideLabeledCounts(scope);
     if (!onFeed()) {
       const scopes = [];
       if (scope.matches && scope.matches(SEL.metricScopes)) scopes.push(scope);

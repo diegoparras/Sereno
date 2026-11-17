@@ -78,7 +78,7 @@ assert.match(await dockBtn.getAttribute('aria-label'), /Planeta Agua/);
 
 await openDock('Marta Ruiz');
 const menu = page.locator('.sereno-menu');
-const items = await menu.locator('.sereno-menu__item').allTextContents();
+const items = await menu.locator('.sereno-menu__label').allTextContents();
 console.log('menú:', items);
 assert.deepEqual(items, ['Nunca ocultar a Marta Ruiz', 'Silenciar a Marta Ruiz']);
 if (shots) await page.screenshot({ path: join(shotDir, 'menu.png'), clip: { x: 300, y: 150, width: 700, height: 420 } });
@@ -106,7 +106,7 @@ await menu.locator('.sereno-menu__item', { hasText: 'Nunca ocultar' }).click();
 await page.waitForTimeout(500);
 assert.equal(await pablo.evaluate(isDim), false, 'protegido ya no se atenúa');
 await openDock('Pablo Vega');
-assert.deepEqual(await menu.locator('.sereno-menu__item').allTextContents(), ['Volver a filtrar a Pablo Vega', 'Silenciar a Pablo Vega']);
+assert.deepEqual(await menu.locator('.sereno-menu__label').allTextContents(), ['Volver a filtrar a Pablo Vega', 'Silenciar a Pablo Vega']);
 await page.keyboard.press('Escape');
 assert.equal(await menu.count(), 0, 'Escape cierra el menú');
 console.log('✔ proteger');
@@ -114,6 +114,46 @@ console.log('✔ proteger');
 // La publicidad no tiene menú de Sereno ni se toca (sí puede tenerlo: es visible, pero la regla de publicidad gana)
 const adVerdict = await wrapperOf('Planeta Agua').getAttribute('data-sereno');
 assert.equal(adVerdict, 'show');
+
+// ---------- 2b. Atajos de teclado ----------
+await focus('Marta Ruiz');
+await page.locator('body').click({ position: { x: 5, y: 5 } });
+await page.keyboard.press('j');
+await page.waitForTimeout(1200);
+assert.match(await dockBtn.getAttribute('aria-label'), /Pablo Vega/, 'J pasa al siguiente post');
+await page.keyboard.press('k');
+await page.waitForTimeout(1200);
+assert.match(await dockBtn.getAttribute('aria-label'), /Marta Ruiz/, 'K vuelve al anterior');
+await page.keyboard.press('p');
+await page.waitForTimeout(300);
+assert.match(await page.locator('.sereno-toast').innerText(), /nunca ocultará a Marta Ruiz/, 'P protege y avisa');
+let ppl = await sw.evaluate(async () => (await chrome.storage.local.get('serenoPeople')).serenoPeople);
+assert.equal(ppl.trusted['in/marta'], 'Marta Ruiz');
+await page.keyboard.press('p');
+await page.waitForTimeout(300);
+ppl = await sw.evaluate(async () => (await chrome.storage.local.get('serenoPeople')).serenoPeople);
+assert.equal(ppl.trusted['in/marta'], undefined, 'P de nuevo deja de proteger');
+// No interfiere al escribir
+await page.evaluate(() => {
+  const i = document.createElement('textarea');
+  i.id = 'typing';
+  document.querySelector('main').prepend(i);
+});
+await page.locator('#typing').focus();
+await page.keyboard.type('mjkp');
+ppl = await sw.evaluate(async () => (await chrome.storage.local.get('serenoPeople')).serenoPeople);
+assert.equal(await page.locator('#typing').inputValue(), 'mjkp', 'al escribir, las teclas no se capturan');
+assert.equal(Object.keys(ppl.muted).length, 0);
+await page.locator('#typing').evaluate((i) => i.remove());
+console.log('✔ atajos de teclado');
+
+// ---------- 2c. Números de la columna lateral ----------
+const sidebar = await page.evaluate(() => ({
+  views: getComputedStyle(document.getElementById('views')).visibility,
+  impr: getComputedStyle(document.getElementById('impr')).visibility
+}));
+assert.deepEqual(sidebar, { views: 'hidden', impr: 'hidden' }, 'números de la columna lateral ocultos');
+console.log('✔ números de la columna lateral');
 
 // ---------- 3. "Ya estás al día" por límite ----------
 await setSettings({ caughtUp: { enabled: true, limit: 2 } });

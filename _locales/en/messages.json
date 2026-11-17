@@ -189,6 +189,40 @@
       }
     }
   },
+  "toastTrusted": {
+    "message": "Sereno will never hide $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "toastUntrusted": {
+    "message": "$VALUE$ is filtered again",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "secShortcuts": {
+    "message": "Keyboard shortcuts"
+  },
+  "secShortcutsDesc": {
+    "message": "They work on the feed while you are not typing."
+  },
+  "keyNext": {
+    "message": "Next post"
+  },
+  "keyPrev": {
+    "message": "Previous post"
+  },
+  "keyMute": {
+    "message": "Mute the author of the focused post"
+  },
+  "keyTrust": {
+    "message": "Protect (or unprotect) the author"
+  },
   "caughtTitleOld": {
     "message": "You're all caught up"
   },

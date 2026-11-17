@@ -33,6 +33,11 @@
 </head>
 <body>
 <main>
+<aside id="leftbar" style="position:fixed; left:24px; top:90px; width:220px; background:#fff; border-radius:8px; box-shadow:0 0 0 1px rgba(0,0,0,.08); padding:12px; font-size:13px">
+  <div class="k4dhdr"><p class="k4dsm"><span>Visualizaciones del perfil</span></p><p class="k4dsm"><span id="views">766</span></p></div>
+  <div class="k4dhdr"><a href="https://www.linkedin.com/x"><span>Impresiones de la publicación</span><strong id="impr">2.362</strong></a></div>
+  <div class="k4dhdr"><span>Tus funcionalidades Premium</span></div>
+</aside>
 <div class="k4dfeed" id="feed"></div>
 </main>
 <script>
@@ -112,7 +117,7 @@
   }, 300);
   // Como la "hidratación" de React en LinkedIn: borra del <body> los nodos que no generó.
   setTimeout(() => {
-    for (const el of Array.from(document.body.children)) if (!['MAIN', 'SCRIPT'].includes(el.tagName)) el.remove();
+    for (const el of Array.from(document.body.children)) if (!['MAIN', 'SCRIPT', 'ASIDE'].includes(el.tagName)) el.remove();
     for (const el of Array.from(document.documentElement.children)) if (!['HEAD', 'BODY'].includes(el.tagName)) el.remove();
     window.__hydrated = true;
   }, 1200);

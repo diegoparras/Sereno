@@ -168,6 +168,23 @@
         </div>
       </section>
 
+      <!-- Atajos -->
+      <section class="card">
+        <div class="card__head">
+          <div>
+            <h2 data-i18n="secShortcuts"></h2>
+            <p data-i18n="secShortcutsDesc"></p>
+          </div>
+          <label class="switch"><input type="checkbox" data-setting="shortcuts.enabled" data-i18n-aria-label="secShortcuts" /><span class="switch__track"></span></label>
+        </div>
+        <dl class="keys" data-depends="shortcuts.enabled">
+          <div><dt><kbd>J</kbd></dt><dd data-i18n="keyNext"></dd></div>
+          <div><dt><kbd>K</kbd></dt><dd data-i18n="keyPrev"></dd></div>
+          <div><dt><kbd>M</kbd></dt><dd data-i18n="keyMute"></dd></div>
+          <div><dt><kbd>P</kbd></dt><dd data-i18n="keyTrust"></dd></div>
+        </dl>
+      </section>
+
       <!-- Transparencia -->
       <section class="card">
         <label class="card__head">

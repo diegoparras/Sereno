@@ -219,3 +219,12 @@ test('personas: protegida gana a todo; silenciada se oculta; publicidad intacta'
   const ad = D.classify(post({ actorHref: '/in/pesado/', meta: 'Promocionado', body: 'x' }), s, people);
   assert.equal(ad.verdict, 'show');
 });
+
+test('etiquetas de métricas sueltas (columna lateral)', () => {
+  for (const t of ['Visualizaciones del perfil', 'Impresiones de la publicación', 'Profile viewers', 'Post impressions', 'Seguidores']) {
+    assert.ok(D.isMetricLabel(t), t);
+  }
+  for (const t of ['Tus funcionalidades Premium', 'Marta Ruiz', 'Ver el análisis de visitantes']) {
+    assert.ok(!D.isMetricLabel(t), t);
+  }
+});

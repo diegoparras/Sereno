@@ -11,9 +11,10 @@ Extensión de Chrome (Manifest V3). Funciona 100% en el navegador: sin servidore
 |---|---|
 | **Solo mi red** | Oculta «a X le gustó», «X comentó» y los sugeridos. Tiene un modo estricto opcional que deja solo contactos directos. |
 | **Detector de humo** | Marca, atenúa u oculta cebos de interacción, historias de plantilla y posts de una frase por renglón. |
-| **Sin números** | Oculta likes, comentarios y contadores de seguidores. |
+| **Sin números** | Oculta likes, comentarios, contadores de seguidores y las métricas de la columna lateral (visualizaciones del perfil, impresiones). |
 | **Palabras silenciadas** | Oculta posts que mencionan temas que no quieres ver. |
 | **Control por persona** | Un botón siempre visible, al costado del feed, sigue al post que estás leyendo (el que cruza la línea de lectura). Ofrece «Silenciar a X» o «Nunca ocultar a X». Protegido le gana a cualquier filtro. |
+| **Atajos de teclado** | `J`/`K` siguiente/anterior, `M` silenciar, `P` proteger. No interfieren al escribir. |
 | **Ya estás al día** | Tarjeta que corta el scroll cuando empiezas a ver posts que ya viste (3 seguidos) o después de N posts por visita (25 por defecto). Lo que sigue se desenfoca, sin ocultarse, para que LinkedIn no cargue más sin parar. |
 
 Regla fija: **nunca toca la publicidad** (ver [docs/LEGAL.md](docs/LEGAL.md)).

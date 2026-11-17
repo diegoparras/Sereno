@@ -189,6 +189,40 @@
       }
     }
   },
+  "toastTrusted": {
+    "message": "Sereno nunca ocultará a $VALUE$",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "toastUntrusted": {
+    "message": "$VALUE$ vuelve a filtrarse",
+    "placeholders": {
+      "value": {
+        "content": "$1"
+      }
+    }
+  },
+  "secShortcuts": {
+    "message": "Atajos de teclado"
+  },
+  "secShortcutsDesc": {
+    "message": "Funcionan en el feed mientras no estés escribiendo."
+  },
+  "keyNext": {
+    "message": "Siguiente publicación"
+  },
+  "keyPrev": {
+    "message": "Publicación anterior"
+  },
+  "keyMute": {
+    "message": "Silenciar al autor de la publicación en foco"
+  },
+  "keyTrust": {
+    "message": "Proteger (o dejar de proteger) al autor"
+  },
   "caughtTitleOld": {
     "message": "Ya estás al día"
   },

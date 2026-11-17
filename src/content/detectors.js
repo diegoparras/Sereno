@@ -314,6 +314,26 @@
     return METRIC_TEXT.test(String(text || '').replace(/\u200b/g, ''));
   }
 
+  /**
+   * Etiquetas de métricas que LinkedIn muestra separadas de su número
+   * (p. ej. "Visualizaciones del perfil" ··· "766" en la columna izquierda).
+   */
+  const METRIC_LABEL = new RegExp(
+    '^(' +
+      [
+        'visualizaciones del perfil', 'visualizaciones de tu perfil', 'quien ha visto tu perfil', 'visitas al perfil',
+        'impresiones de (la|las|tus) publicaci(on|ones)', 'impresiones', 'visualizaciones',
+        'apariciones en (las )?busquedas', 'seguidores', 'conexiones', 'contactos',
+        'profile viewers', 'profile views', 'who viewed your profile', 'post impressions', 'impressions', 'views',
+        'search appearances', 'followers', 'connections',
+        'visualizacoes do perfil', 'impressoes da publicacao', 'impressoes'
+      ].join('|') +
+      ')$'
+  );
+  function isMetricLabel(text) {
+    return METRIC_LABEL.test(normalize(text));
+  }
+
   const api = {
     normalize,
     isPromoted,
@@ -326,6 +346,7 @@
     authorId,
     postHash,
     isMetricText,
+    isMetricLabel,
     SENSITIVITY_THRESHOLD
   };
   root.SerenoDetect = api;
