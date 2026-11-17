@@ -71,5 +71,5 @@ Todo lo que depende del HTML está en el objeto `SEL` de `src/content/content.js
 - [x] Adaptado al feed de LinkedIn de nov. 2026 (a partir de un diagnóstico real)
 - [ ] Confirmar en el LinkedIn real después del ajuste
 - [ ] Definir el nombre definitivo (ver docs/LEGAL.md)
-- [ ] Publicar la política de privacidad en una URL pública y completar el email de contacto
-- [ ] Imagen promocional de 440×280
+- [x] Sitio y política de privacidad publicados: https://diegoparras.github.io/Sereno/
+- [x] Capturas 1280×800 e imagen promocional 440×280 (`npm run store-assets`)

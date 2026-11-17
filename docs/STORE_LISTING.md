@@ -75,9 +75,15 @@ Make the LinkedIn feed calmer and more relevant by hiding or dimming posts the u
 
 **Datos recolectados:** ninguno. Marcar "No recolecto datos de usuario". Certificar las tres declaraciones: no se venden datos, no se usan para fines ajenos al propósito único y no se usan para evaluar crédito.
 
-**URL de la política de privacidad:** publicar `docs/PRIVACY.md` en una URL pública (GitHub Pages, Notion o un sitio propio) y pegar el enlace.
+**URL de la política de privacidad:** https://diegoparras.github.io/Sereno/privacy.html
+
+**Sitio web de la extensión:** https://diegoparras.github.io/Sereno/
+**URL de soporte:** https://github.com/diegoparras/Sereno/issues
 
 ## Recursos gráficos
 - Ícono 128×128: `icons/icon-128.png`
-- Capturas 1280×800: generar con `npm run screenshots` (quedan en `docs/screenshots/`). **No** usar capturas con datos reales de otras personas: el feed simulado de los tests sirve para esto.
-- Imagen promocional pequeña de 440×280 (opcional): pendiente.
+- Capturas 1280×800 e imagen promocional 440×280: `npm run screenshots && npm run store-assets` → `dist/store/es/` y `dist/store/en/`. Usan solo el feed simulado, nunca datos reales de otras personas.
+- Las capturas en inglés muestran la interfaz en español (las capturas base se toman con el navegador en español).
+
+## Sitio público
+El sitio (inicio y privacidad) vive en la rama `gh-pages`, que solo contiene `site/`. Para actualizarlo, copiar `site/*` a esa rama y subirla.

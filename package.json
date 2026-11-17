@@ -9,7 +9,8 @@
     "e2e": "node tests/e2e.mjs && node tests/e2e-2026.mjs && node tests/e2e-features.mjs",
     "screenshots": "node tests/e2e.mjs --shots && node tests/e2e-2026.mjs --shots && node tests/e2e-features.mjs --shots",
     "pack": "node scripts/build-locales.mjs && node scripts/pack.mjs",
-    "rename": "node scripts/rename.mjs"
+    "rename": "node scripts/rename.mjs",
+    "store-assets": "node scripts/store-assets.mjs"
   },
   "license": "UNLICENSED"
 }

@@ -1,6 +1,6 @@
 # Política de privacidad — Sereno
 
-_Última actualización: 16 de noviembre de 2026_
+_Última actualización: 17 de noviembre de 2026_
 
 **Resumen: Sereno no recolecta, no vende y no envía tus datos a ningún lado.**
 
@@ -29,13 +29,13 @@ Usa el almacenamiento de Chrome (`chrome.storage`) para guardar únicamente:
 Desinstalar la extensión elimina todo lo que guardó. También puedes usar «Restablecer ajustes» en la página de opciones.
 
 ## Contacto
-[COMPLETAR: email de contacto del desarrollador]
+Preguntas o pedidos: https://github.com/diegoparras/Sereno/issues
 
 ---
 
 # Privacy policy — Sereno
 
-_Last updated: November 16, 2026_
+_Last updated: November 17, 2026_
 
 **In short: Sereno does not collect, sell or send your data anywhere.**
 
@@ -49,4 +49,4 @@ Permissions: `storage` (settings and counters) and access to `https://www.linked
 
 Uninstalling the extension removes all stored data.
 
-Contact: [FILL IN: developer contact email]
+Contact: https://github.com/diegoparras/Sereno/issues
